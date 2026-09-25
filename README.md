@@ -32,14 +32,14 @@ Atver divus PowerShell logus.
 ### 1. logs - Vue/Vite
 
 ```powershell
-cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\laravel-task-manager"
+cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\cenalitra-lv"
 npm run dev
 ```
 
 ### 2. logs - Laravel/PHP
 
 ```powershell
-cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\laravel-task-manager"
+cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\cenalitra-lv"
 & "C:\xampp\php\php.exe" -S 127.0.0.1:9000 -t public
 ```
 
@@ -54,7 +54,7 @@ http://127.0.0.1:9000/
 Pirmreizējai datubāzes sagatavošanai:
 
 ```powershell
-cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\laravel-task-manager"
+cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\cenalitra-lv"
 & "C:\xampp\php\php.exe" artisan migrate --force
 & "C:\xampp\php\php.exe" artisan fetch:fuel-prices
 ```

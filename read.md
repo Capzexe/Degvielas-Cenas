@@ -9,7 +9,7 @@ Atver divus termināļus.
 ### 1. terminālis - frontend
 
 ```powershell
-cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\laravel-task-manager"
+cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\cenalitra-lv"
 npm run dev
 ```
 
@@ -18,7 +18,7 @@ Atstāj šo termināli atvērtu.
 ### 2. terminālis - Laravel/PHP serveris
 
 ```powershell
-cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\laravel-task-manager"
+cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\cenalitra-lv"
 & "C:\xampp\php\php.exe" -S 127.0.0.1:9000 -t public
 ```
 
@@ -35,7 +35,7 @@ http://127.0.0.1:9000/
 Palaid šo komandu, lai mēģinātu ielasīt cenas no oficiālajām publiskajām DUS tīklu lapām:
 
 ```powershell
-cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\laravel-task-manager"
+cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\cenalitra-lv"
 & "C:\xampp\php\php.exe" artisan fetch:fuel-prices
 ```
 
@@ -64,7 +64,7 @@ Testa cenas projektā vairs netiek izmantotas. Ja oficiālā lapa nav sasniedzam
 Ja datubāze vēl nav sagatavota, palaid:
 
 ```powershell
-cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\laravel-task-manager"
+cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\cenalitra-lv"
 & "C:\xampp\php\php.exe" artisan migrate --force
 & "C:\xampp\php\php.exe" artisan fetch:fuel-prices
 npm install
