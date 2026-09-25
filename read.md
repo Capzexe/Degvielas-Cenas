@@ -19,7 +19,7 @@ Atstāj šo termināli atvērtu.
 
 ```powershell
 cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\laravel-task-manager"
-php -S 127.0.0.1:9000 -t public
+& "C:\xampp\php\php.exe" -S 127.0.0.1:9000 -t public
 ```
 
 Atstāj arī šo termināli atvērtu.
@@ -36,24 +36,24 @@ Palaid šo komandu, lai mēģinātu ielasīt cenas no oficiālajām publiskajām
 
 ```powershell
 cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\laravel-task-manager"
-php artisan fetch:fuel-prices
+& "C:\xampp\php\php.exe" artisan fetch:fuel-prices
 ```
 
 Svarīgi: ne visi tīkli publicē pilnas aktuālās cenas tiešsaistē. Neste cenām šobrīd vajadzīgs lietotāju ziņojumu vai partnera/API risinājums.
 
 Ja oficiālā lapa publicē tikai tīkla zemāko cenu, nevis pilnu katras stacijas cenu sarakstu, aplikācija šo cenu rāda kā publicētu cenu ierakstu, nevis kā precīzu cenu visām konkrētā zīmola stacijām.
 
-## Cenu vēstures diagramma
+## Cenu vēsture
 
-Diagramma mājaslapā izmanto tabulu `prices`. Katru reizi, kad palaid:
+Projekts turpina krāt cenu vēsturi tabulā `prices`. Katru reizi, kad palaid:
 
 ```powershell
-php artisan fetch:fuel-prices
+& "C:\xampp\php\php.exe" artisan fetch:fuel-prices
 ```
 
-tiek saglabāts jauns cenu ieraksts ar laiku `fetched_at`. Vēsture kļūst noderīga tikai pēc vairākām ielādēm dažādos laikos vai tad, kad šī komanda regulāri darbojas uz servera.
+tiek saglabāts jauns cenu ieraksts ar laiku `fetched_at`. Vēsture kļūst noderīga pēc vairākām ielādēm dažādos laikos vai tad, kad šī komanda regulāri darbojas uz servera.
 
-Lokāli vari pārbaudīt diagrammu, palaižot cenu ielādi vairākas reizes dažādās dienās/laikos. Publiskā serverī jāuzliek Laravel scheduler/cron, lai komanda skrien automātiski.
+Šobrīd vēstures diagramma nav sākumlapā, bet dati tiek vākti, lai vēlāk varētu uzbūvēt atsevišķu analītikas skatu.
 
 ## Testa cenas
 
@@ -65,8 +65,8 @@ Ja datubāze vēl nav sagatavota, palaid:
 
 ```powershell
 cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\laravel-task-manager"
-php artisan migrate --force
-php artisan fetch:fuel-prices
+& "C:\xampp\php\php.exe" artisan migrate --force
+& "C:\xampp\php\php.exe" artisan fetch:fuel-prices
 npm install
 ```
 
@@ -76,6 +76,9 @@ Mājaslapa:
 
 ```text
 http://127.0.0.1:9000/gas
+http://127.0.0.1:9000/akcijas
+http://127.0.0.1:9000/blog
+http://127.0.0.1:9000/about
 ```
 
 API:
@@ -92,19 +95,19 @@ http://127.0.0.1:9000/api/stations/cheapest?fuel_type=LPG
 Ja `php artisan serve` nestrādā, izmanto šo:
 
 ```powershell
-php -S 127.0.0.1:9000 -t public
+& "C:\xampp\php\php.exe" -S 127.0.0.1:9000 -t public
 ```
 
-Ja `php` netiek atpazīts, uzinstalē Laravel Herd for Windows un atver termināli no jauna:
+Ja `php` netiek atpazīts, izmanto XAMPP PHP pilno ceļu:
 
-```text
-https://herd.laravel.com/windows
+```powershell
+& "C:\xampp\php\php.exe" -v
 ```
 
 Ja lapa atveras, bet cenas ir tukšas, palaid:
 
 ```powershell
-php artisan fetch:fuel-prices
+& "C:\xampp\php\php.exe" artisan fetch:fuel-prices
 ```
 
 Ja oficiālās lapas neatdod nolasāmas cenas, pārbaudi interneta savienojumu, avota lapas pieejamību un palaid importu vēlreiz. Izdomātas cenas netiek saglabātas.
