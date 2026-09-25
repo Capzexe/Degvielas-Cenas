@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "capzexe/cenalitra-lv",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "CenaLitrā.lv - Laravel and Vue application for tracking public fuel prices in Latvia.",
+    "keywords": ["laravel", "vue", "fuel-prices", "latvia", "cenalitra"],
     "license": "MIT",
     "require": {
         "php": "^8.2",

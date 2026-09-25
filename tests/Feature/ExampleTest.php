@@ -9,18 +9,18 @@ class ExampleTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_home_redirects_to_appointments(): void
+    public function test_home_page_loads(): void
     {
         $response = $this->get('/');
 
-        $response->assertRedirect('/appointments');
+        $response->assertStatus(200);
+        $response->assertSee('Degvielas Cenas Latvijā');
     }
 
-    public function test_login_page_loads(): void
+    public function test_public_content_pages_load(): void
     {
-        $response = $this->get('/login');
-
-        $response->assertStatus(200);
-        $response->assertSee('Autoservisa rezervacijas');
+        $this->get('/degvielas-atlaides')->assertStatus(200);
+        $this->get('/blog')->assertStatus(200);
+        $this->get('/par-projektu')->assertStatus(200);
     }
 }
