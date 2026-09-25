@@ -54,33 +54,25 @@
                         Salīdzini lojalitātes kartes, lietotņu kuponus un ģimenes kartes piedāvājumus, kur atlaide ir izmērāma.
                     </p>
                 </div>
-                <span class="rounded-full border border-emerald-300/30 bg-emerald-300/10 px-3 py-1 text-xs font-semibold text-emerald-100">
-                    {{ $offers->count() }} piedāvājumi
-                </span>
             </div>
 
-            <div class="mt-5 grid gap-3 md:hidden">
+            <div class="mt-5 grid gap-3 sm:grid-cols-2 md:hidden">
                 @foreach ($offers as $offer)
-                    <article class="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-                        <div class="flex flex-wrap items-start justify-between gap-3">
-                            <div class="min-w-0">
-                                <span class="inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold {{ $tones[$offer['brand']] ?? 'border-cyan-300/30 bg-cyan-300/10 text-cyan-100' }}">
-                                    {{ $offer['brand'] }}
-                                </span>
-                                <h3 class="mt-3 text-base font-semibold leading-6 text-white">{{ $offer['name'] }}</h3>
-                                <p class="mt-1 text-xs text-slate-400">{{ $offer['applies_to'] }}</p>
-                            </div>
-
-                            <div class="rounded-lg border border-emerald-300/20 bg-emerald-300/10 px-3 py-2 text-right">
-                                <p class="text-[0.65rem] font-semibold uppercase text-emerald-100/70">Atlaide</p>
-                                <p class="mt-1 text-xl font-semibold tabular-nums text-emerald-200">{{ $offer['discount'] }}</p>
-                            </div>
+                    <article class="grid min-h-56 grid-rows-[auto_1fr_auto] rounded-xl border border-white/10 bg-white/[0.035] p-4">
+                        <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-3">
+                            <p class="text-sm font-semibold text-white">{{ $offer['brand'] }}</p>
+                            <p class="shrink-0 text-xs text-cyan-100/70">{{ $offer['applies_to'] }}</p>
                         </div>
 
-                        <dl class="mt-4 grid gap-1 rounded-lg border border-white/10 bg-gray-950/60 p-3">
-                            <dt class="text-[0.65rem] font-semibold uppercase text-cyan-100/70">Nosacījums</dt>
-                            <dd class="text-sm leading-6 text-slate-300">{{ $offer['details'] }}</dd>
-                        </dl>
+                        <div class="py-4">
+                            <h3 class="text-base font-semibold leading-6 text-white">{{ $offer['name'] }}</h3>
+                            <p class="mt-3 text-sm leading-6 text-slate-300">{{ $offer['details'] }}</p>
+                        </div>
+
+                        <div class="flex items-end justify-between gap-4 border-t border-white/10 pt-3">
+                            <span class="text-xs font-semibold uppercase text-slate-400">Atlaide</span>
+                            <span class="text-2xl font-semibold tabular-nums text-emerald-200">{{ $offer['discount'] }}</span>
+                        </div>
                     </article>
                 @endforeach
             </div>
