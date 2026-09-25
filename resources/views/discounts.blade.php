@@ -59,7 +59,33 @@
                 </span>
             </div>
 
-            <div class="mt-5 overflow-x-auto rounded-xl border border-white/10">
+            <div class="mt-5 grid gap-3 md:hidden">
+                @foreach ($offers as $offer)
+                    <article class="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+                        <div class="flex flex-wrap items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <span class="inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold {{ $tones[$offer['brand']] ?? 'border-cyan-300/30 bg-cyan-300/10 text-cyan-100' }}">
+                                    {{ $offer['brand'] }}
+                                </span>
+                                <h3 class="mt-3 text-base font-semibold leading-6 text-white">{{ $offer['name'] }}</h3>
+                                <p class="mt-1 text-xs text-slate-400">{{ $offer['applies_to'] }}</p>
+                            </div>
+
+                            <div class="rounded-lg border border-emerald-300/20 bg-emerald-300/10 px-3 py-2 text-right">
+                                <p class="text-[0.65rem] font-semibold uppercase text-emerald-100/70">Atlaide</p>
+                                <p class="mt-1 text-xl font-semibold tabular-nums text-emerald-200">{{ $offer['discount'] }}</p>
+                            </div>
+                        </div>
+
+                        <dl class="mt-4 grid gap-1 rounded-lg border border-white/10 bg-gray-950/60 p-3">
+                            <dt class="text-[0.65rem] font-semibold uppercase text-cyan-100/70">Nosacījums</dt>
+                            <dd class="text-sm leading-6 text-slate-300">{{ $offer['details'] }}</dd>
+                        </dl>
+                    </article>
+                @endforeach
+            </div>
+
+            <div class="mt-5 hidden overflow-x-auto rounded-xl border border-white/10 md:block">
                 <table class="min-w-[48rem] w-full border-collapse text-left text-sm">
                     <thead class="bg-white/[0.04] text-xs uppercase text-cyan-100/75">
                         <tr>
@@ -92,10 +118,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <p class="mt-3 text-xs leading-5 text-slate-400">
-                Atlaides var nesummēties ar citām akcijām un var mainīties. Pirms uzpildes pārbaudi nosacījumus attiecīgā DUS tīkla lietotnē vai oficiālajā lapā.
-            </p>
         </section>
     </main>
 @endsection
