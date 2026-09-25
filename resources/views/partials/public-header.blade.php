@@ -9,14 +9,12 @@
 
 <header class="sticky top-0 z-[2000] border-b border-white/10 bg-gray-950/88 backdrop-blur">
     <nav class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8" aria-label="Galvenā navigācija">
-        <a href="{{ route('gas.index') }}" class="group flex items-center gap-3">
-            <span class="flex size-10 items-center justify-center rounded-xl border border-emerald-300/30 bg-emerald-300/10 text-sm font-black text-emerald-200">
-                DC
-            </span>
-            <span class="min-w-0">
-                <span class="block text-sm font-semibold text-white">Degvielas Cenas</span>
-                <span class="block text-xs text-cyan-100/70">Latvija</span>
-            </span>
+        <a href="{{ route('gas.index') }}" class="flex min-w-0 items-center">
+            <img
+                src="{{ asset('images/cenalitra-logo.png') }}"
+                alt="CenaLitrā.lv"
+                class="h-10 w-auto max-w-[11rem] object-contain sm:h-12 sm:max-w-[14rem]"
+            >
         </a>
 
         <div class="hidden items-center gap-1 rounded-xl border border-white/10 bg-white/[0.03] p-1 md:flex">
