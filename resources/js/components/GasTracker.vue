@@ -488,6 +488,7 @@ onBeforeUnmount(() => {
     background: #020617;
     color: #e0f2fe;
     font-family: inherit;
+    z-index: 0;
 }
 
 .leaflet-control-attribution {

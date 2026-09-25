@@ -7,7 +7,7 @@
     ];
 @endphp
 
-<header class="sticky top-0 z-40 border-b border-white/10 bg-gray-950/88 backdrop-blur">
+<header class="sticky top-0 z-[2000] border-b border-white/10 bg-gray-950/88 backdrop-blur">
     <nav class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8" aria-label="Galvenā navigācija">
         <a href="{{ route('gas.index') }}" class="group flex items-center gap-3">
             <span class="flex size-10 items-center justify-center rounded-xl border border-emerald-300/30 bg-emerald-300/10 text-sm font-black text-emerald-200">
