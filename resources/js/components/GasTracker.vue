@@ -1,21 +1,28 @@
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import {
+    computed,
+    nextTick,
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    watch,
+} from "vue";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
-const fuelTypes = ['95', '98', 'Diesel', 'LPG'];
+const fuelTypes = ["Diesel", "95", "98", "LPG"];
 
 const fuelTypeLabels = {
-    95: '95',
-    98: '98',
-    Diesel: 'Dīzelis',
-    LPG: 'LPG',
+    Diesel: "Dīzelis",
+    95: "95",
+    98: "98",
+    LPG: "LPG",
 };
 
-const selectedFuelType = ref('95');
+const selectedFuelType = ref(fuelTypes[0]);
 const stations = ref([]);
 const isLoading = ref(false);
-const errorMessage = ref('');
+const errorMessage = ref("");
 const mapElement = ref(null);
 const map = ref(null);
 const markerLayer = ref(null);
@@ -28,10 +35,10 @@ const stationGroupKey = (station) => {
     return [
         station.brand,
         station.selected_fuel_price,
-        price?.source_type ?? '',
-        price?.source_label ?? '',
-        price?.source_url ?? '',
-    ].join('|');
+        price?.source_type ?? "",
+        price?.source_label ?? "",
+        price?.source_url ?? "",
+    ].join("|");
 };
 
 const groupedPriceRows = computed(() => {
@@ -39,8 +46,11 @@ const groupedPriceRows = computed(() => {
     const rows = [];
 
     selectedStations.value.forEach((station) => {
-        const canGroup = station.map_location_exact && station.selected_fuel_price !== null;
-        const key = canGroup ? stationGroupKey(station) : `station-${station.id}`;
+        const canGroup =
+            station.map_location_exact && station.selected_fuel_price !== null;
+        const key = canGroup
+            ? stationGroupKey(station)
+            : `station-${station.id}`;
 
         if (!groups.has(key)) {
             const row = {
@@ -49,13 +59,15 @@ const groupedPriceRows = computed(() => {
                 station_ids: [station.id],
                 station_count: 1,
                 is_group: false,
-                addresses: [{
-                    id: station.id,
-                    name: station.name,
-                    address: station.address,
-                    latitude: station.latitude,
-                    longitude: station.longitude,
-                }],
+                addresses: [
+                    {
+                        id: station.id,
+                        name: station.name,
+                        address: station.address,
+                        latitude: station.latitude,
+                        longitude: station.longitude,
+                    },
+                ],
             };
 
             groups.set(key, row);
@@ -85,11 +97,15 @@ const groupedPriceRows = computed(() => {
 
 const cheapestStation = computed(() => groupedPriceRows.value[0] ?? null);
 
-const mapStations = computed(() => selectedStations.value.filter((station) => {
-    return station.map_location_exact
-        && Number.isFinite(Number(station.latitude))
-        && Number.isFinite(Number(station.longitude));
-}));
+const mapStations = computed(() =>
+    selectedStations.value.filter((station) => {
+        return (
+            station.map_location_exact &&
+            Number.isFinite(Number(station.latitude)) &&
+            Number.isFinite(Number(station.longitude))
+        );
+    }),
+);
 
 const cheapestMapStation = computed(() => mapStations.value[0] ?? null);
 
@@ -107,7 +123,7 @@ const averagePrice = computed(() => {
 
 const formatPrice = (price) => {
     if (price === null || price === undefined) {
-        return '-';
+        return "-";
     }
 
     return `${Number(price).toFixed(3)} EUR`;
@@ -116,40 +132,44 @@ const formatPrice = (price) => {
 const fuelTypeLabel = (fuelType) => fuelTypeLabels[fuelType] ?? fuelType;
 
 const getFuelPrice = (station, fuelType) => {
-    return station.latest_prices.find((price) => price.fuel_type === fuelType) ?? null;
+    return (
+        station.latest_prices.find((price) => price.fuel_type === fuelType) ??
+        null
+    );
 };
 
 const freshnessLabel = (station) => {
     const price = getFuelPrice(station, selectedFuelType.value);
 
     if (!price?.fetched_at) {
-        return 'Nav aktuālas cenas';
+        return "Nav aktuālas cenas";
     }
 
-    return new Intl.DateTimeFormat('lv-LV', {
-        day: '2-digit',
-        month: 'short',
-        hour: '2-digit',
-        minute: '2-digit',
+    return new Intl.DateTimeFormat("lv-LV", {
+        day: "2-digit",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
     }).format(new Date(price.fetched_at));
 };
 
 const brandTone = (brand) => {
     const tones = {
-        'Circle K': 'border-red-400/40 bg-red-400/10 text-red-100',
-        Neste: 'border-blue-400/40 bg-blue-400/10 text-blue-100',
-        Virsi: 'border-emerald-400/40 bg-emerald-400/10 text-emerald-100',
-        Viada: 'border-yellow-300/40 bg-yellow-300/10 text-yellow-100',
-        'Straujupīte': 'border-orange-300/40 bg-orange-300/10 text-orange-100',
+        "Circle K": "border-red-400/40 bg-red-400/10 text-red-100",
+        Neste: "border-blue-400/40 bg-blue-400/10 text-blue-100",
+        Virsi: "border-emerald-400/40 bg-emerald-400/10 text-emerald-100",
+        Viada: "border-yellow-300/40 bg-yellow-300/10 text-yellow-100",
+        Straujupīte: "border-orange-300/40 bg-orange-300/10 text-orange-100",
     };
 
-    return tones[brand] ?? 'border-cyan-300/40 bg-cyan-300/10 text-cyan-100';
+    return tones[brand] ?? "border-cyan-300/40 bg-cyan-300/10 text-cyan-100";
 };
 
-const selectedPrice = (station) => getFuelPrice(station, selectedFuelType.value);
+const selectedPrice = (station) =>
+    getFuelPrice(station, selectedFuelType.value);
 
 const sourceLabel = (station) => {
-    return selectedPrice(station)?.source_label ?? 'Avots nav zināms';
+    return selectedPrice(station)?.source_label ?? "Avots nav zināms";
 };
 
 const sourceUrl = (station) => selectedPrice(station)?.source_url ?? null;
@@ -157,22 +177,20 @@ const sourceUrl = (station) => selectedPrice(station)?.source_url ?? null;
 const sourceTone = (station) => {
     const sourceType = selectedPrice(station)?.source_type;
 
-    if (sourceType?.startsWith('official')) {
-        return 'border-emerald-300/30 bg-emerald-300/10 text-emerald-100';
+    if (sourceType?.startsWith("official")) {
+        return "border-emerald-300/30 bg-emerald-300/10 text-emerald-100";
     }
 
-    if (sourceType === 'user_reported') {
-        return 'border-cyan-300/30 bg-cyan-300/10 text-cyan-100';
+    if (sourceType === "user_reported") {
+        return "border-cyan-300/30 bg-cyan-300/10 text-cyan-100";
     }
 
-    return 'border-slate-400/30 bg-slate-400/10 text-slate-200';
+    return "border-slate-400/30 bg-slate-400/10 text-slate-200";
 };
 
 const markerHtml = (station, isCheapest) => {
     const price = formatPrice(station.selected_fuel_price);
-    const markerClass = isCheapest
-        ? 'best-price-marker'
-        : 'fuel-price-marker';
+    const markerClass = isCheapest ? "best-price-marker" : "fuel-price-marker";
 
     return `
         <div class="${markerClass}">
@@ -181,17 +199,18 @@ const markerHtml = (station, isCheapest) => {
     `;
 };
 
-const markerIcon = (station, isCheapest = false) => L.divIcon({
-    className: 'fuel-map-marker-wrapper',
-    html: markerHtml(station, isCheapest),
-    iconSize: [1, 1],
-    iconAnchor: [0, 0],
-    popupAnchor: [0, -44],
-});
+const markerIcon = (station, isCheapest = false) =>
+    L.divIcon({
+        className: "fuel-map-marker-wrapper",
+        html: markerHtml(station, isCheapest),
+        iconSize: [1, 1],
+        iconAnchor: [0, 0],
+        popupAnchor: [0, -44],
+    });
 
 const popupHtml = (station, isCheapest) => `
     <div class="fuel-map-popup">
-        <p class="fuel-map-popup__rank">${isCheapest ? 'Lētākā cena' : station.brand}</p>
+        <p class="fuel-map-popup__rank">${isCheapest ? "Lētākā cena" : station.brand}</p>
         <strong>${station.name}</strong>
         <span>${station.address}</span>
         <b>${formatPrice(station.selected_fuel_price)} / ${fuelTypeLabel(selectedFuelType.value)}</b>
@@ -211,12 +230,14 @@ const initializeMap = async () => {
         scrollWheelZoom: false,
     }).setView([56.9496, 24.1052], 7);
 
-    L.control.zoom({
-        position: 'bottomright',
-    }).addTo(map.value);
+    L.control
+        .zoom({
+            position: "bottomright",
+        })
+        .addTo(map.value);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap',
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap",
         maxZoom: 19,
     }).addTo(map.value);
 
@@ -252,7 +273,7 @@ const renderMapMarkers = async () => {
         })
             .bindPopup(popupHtml(station, isCheapest), {
                 closeButton: false,
-                className: 'fuel-map-popup-shell',
+                className: "fuel-map-popup-shell",
             })
             .addTo(markerLayer.value);
     });
@@ -260,9 +281,13 @@ const renderMapMarkers = async () => {
     const cheapest = cheapestMapStation.value;
 
     if (cheapest) {
-        map.value.setView([Number(cheapest.latitude), Number(cheapest.longitude)], mapStations.value.length === 1 ? 12 : 9, {
-            animate: true,
-        });
+        map.value.setView(
+            [Number(cheapest.latitude), Number(cheapest.longitude)],
+            mapStations.value.length === 1 ? 12 : 9,
+            {
+                animate: true,
+            },
+        );
     } else if (bounds.length > 1) {
         map.value.fitBounds(bounds, {
             padding: [28, 28],
@@ -273,20 +298,23 @@ const renderMapMarkers = async () => {
 
 const fetchStations = async () => {
     isLoading.value = true;
-    errorMessage.value = '';
+    errorMessage.value = "";
 
     try {
-        const response = await fetch(`/api/stations/cheapest?fuel_type=${encodeURIComponent(selectedFuelType.value)}`);
+        const response = await fetch(
+            `/api/stations/cheapest?fuel_type=${encodeURIComponent(selectedFuelType.value)}`,
+        );
 
         if (!response.ok) {
-            throw new Error('Neizdevās ielādēt degvielas cenas.');
+            throw new Error("Neizdevās ielādēt degvielas cenas.");
         }
 
         const payload = await response.json();
         stations.value = payload.data;
         await renderMapMarkers();
     } catch (error) {
-        errorMessage.value = error.message ?? 'Kaut kas nogāja greizi, ielādējot cenas.';
+        errorMessage.value =
+            error.message ?? "Kaut kas nogāja greizi, ielādējot cenas.";
         stations.value = [];
         await renderMapMarkers();
     } finally {
@@ -310,26 +338,51 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <main class="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(20,184,166,0.18),_transparent_32rem),#030712]">
-        <section class="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-6 sm:px-6 lg:px-8">
-            <header class="flex flex-col gap-6 border-b border-white/10 pb-6 lg:flex-row lg:items-end lg:justify-between">
+    <main
+        class="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(20,184,166,0.18),_transparent_32rem),#030712]"
+    >
+        <section
+            class="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-6 sm:px-6 lg:px-8"
+        >
+            <header
+                class="flex flex-col gap-6 border-b border-white/10 pb-6 lg:flex-row lg:items-end lg:justify-between"
+            >
                 <div class="max-w-3xl">
-                    <h1 class="text-3xl font-semibold tracking-tight text-white sm:text-5xl">
+                    <h1
+                        class="text-3xl font-semibold tracking-tight text-white sm:text-5xl"
+                    >
                         Degvielas cenas Latvijā šodien
                     </h1>
-                    <p class="mt-4 max-w-2xl text-sm leading-6 text-cyan-100/80 sm:text-base">
-                        Salīdzini jaunākās zināmās publiskās degvielas cenas Latvijas lielākajos DUS tīklos. Katra cena rāda savu avotu, lai ir skaidrs, vai tā ir konkrētas stacijas cena vai publicēta tīkla cena.
+                    <p
+                        class="mt-4 max-w-2xl text-sm leading-6 text-cyan-100/80 sm:text-base"
+                    >
+                        Salīdzini jaunākās zināmās publiskās degvielas cenas
+                        Latvijas lielākajos DUS tīklos. Katra cena rāda savu
+                        avotu, lai ir skaidrs, vai tā ir konkrētas stacijas cena
+                        vai publicēta tīkla cena.
                     </p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3 sm:flex">
-                    <div class="rounded-xl border border-emerald-300/30 bg-emerald-300/10 px-4 py-3">
-                        <p class="text-xs uppercase text-emerald-100/70">Lētākā cena</p>
+                    <div
+                        class="rounded-xl border border-emerald-300/30 bg-emerald-300/10 px-4 py-3"
+                    >
+                        <p class="text-xs uppercase text-emerald-100/70">
+                            Lētākā cena
+                        </p>
                         <p class="mt-1 text-xl font-semibold text-emerald-200">
-                            {{ cheapestStation ? formatPrice(cheapestStation.selected_fuel_price) : '-' }}
+                            {{
+                                cheapestStation
+                                    ? formatPrice(
+                                          cheapestStation.selected_fuel_price,
+                                      )
+                                    : "-"
+                            }}
                         </p>
                     </div>
-                    <div class="rounded-xl border border-cyan-300/30 bg-cyan-300/10 px-4 py-3">
+                    <div
+                        class="rounded-xl border border-cyan-300/30 bg-cyan-300/10 px-4 py-3"
+                    >
                         <p class="text-xs uppercase text-cyan-100/70">Vidēji</p>
                         <p class="mt-1 text-xl font-semibold text-cyan-100">
                             {{ formatPrice(averagePrice) }}
@@ -338,19 +391,32 @@ onBeforeUnmount(() => {
                 </div>
             </header>
 
-            <div class="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 shadow-2xl shadow-cyan-950/30 sm:flex-row sm:items-center sm:justify-between">
+            <div
+                class="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 shadow-2xl shadow-cyan-950/30 sm:flex-row sm:items-center sm:justify-between"
+            >
                 <div>
-                    <h2 class="text-lg font-semibold text-white">Degvielas veids</h2>
-                    <p class="mt-1 text-sm text-slate-300">Izvēlies degvielu, lai sakārtotu stacijas no lētākās cenas uz augstāko.</p>
+                    <h2 class="text-lg font-semibold text-white">
+                        Degvielas veids
+                    </h2>
+                    <p class="mt-1 text-sm text-slate-300">
+                        Izvēlies degvielu, lai sakārtotu stacijas no lētākās
+                        cenas uz augstāko.
+                    </p>
                 </div>
 
-                <div class="grid grid-cols-4 gap-2 rounded-xl bg-gray-950/80 p-1">
+                <div
+                    class="grid grid-cols-4 gap-2 rounded-xl bg-gray-950/80 p-1"
+                >
                     <button
                         v-for="fuelType in fuelTypes"
                         :key="fuelType"
                         type="button"
                         class="rounded-lg px-3 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-emerald-300"
-                        :class="selectedFuelType === fuelType ? 'bg-emerald-300 text-gray-950 shadow-lg shadow-emerald-500/20' : 'text-slate-300 hover:bg-white/[0.08] hover:text-white'"
+                        :class="
+                            selectedFuelType === fuelType
+                                ? 'bg-emerald-300 text-gray-950 shadow-lg shadow-emerald-500/20'
+                                : 'text-slate-300 hover:bg-white/[0.08] hover:text-white'
+                        "
                         @click="selectedFuelType = fuelType"
                     >
                         {{ fuelTypeLabel(fuelType) }}
@@ -358,25 +424,50 @@ onBeforeUnmount(() => {
                 </div>
             </div>
 
-            <section class="rounded-2xl border border-cyan-300/20 bg-cyan-950/20 p-4 shadow-2xl shadow-cyan-950/30">
-                <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <section
+                class="rounded-2xl border border-cyan-300/20 bg-cyan-950/20 p-4 shadow-2xl shadow-cyan-950/30"
+            >
+                <div
+                    class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"
+                >
                     <div>
-                        <h2 class="text-lg font-semibold text-white">Lētākā cena kartē</h2>
+                        <h2 class="text-lg font-semibold text-white">
+                            Lētākā cena kartē
+                        </h2>
                         <p class="mt-1 max-w-2xl text-sm text-cyan-100/75">
-                            Karte rāda tikai cenas, kurām ir zināma konkrēta DUS atrašanās vieta. Tīkla vai publicētās kopējās cenas paliek sarakstā zem kartes.
+                            Karte rāda tikai cenas, kurām ir zināma konkrēta DUS
+                            atrašanās vieta. Tīkla vai publicētās kopējās cenas
+                            paliek sarakstā zem kartes.
                         </p>
                     </div>
 
-                    <div v-if="cheapestMapStation" class="rounded-xl border border-emerald-300/25 bg-emerald-300/10 px-4 py-3 md:min-w-72">
-                        <p class="text-xs uppercase text-emerald-100/70">Labākā cena kartē</p>
-                        <p class="mt-1 truncate text-base font-semibold text-white">{{ cheapestMapStation.name }}</p>
-                        <p class="mt-2 text-2xl font-semibold tabular-nums text-emerald-200">
-                            {{ formatPrice(cheapestMapStation.selected_fuel_price) }}
+                    <div
+                        v-if="cheapestMapStation"
+                        class="rounded-xl border border-emerald-300/25 bg-emerald-300/10 px-4 py-3 md:min-w-72"
+                    >
+                        <p class="text-xs uppercase text-emerald-100/70">
+                            Labākā cena kartē
+                        </p>
+                        <p
+                            class="mt-1 truncate text-base font-semibold text-white"
+                        >
+                            {{ cheapestMapStation.name }}
+                        </p>
+                        <p
+                            class="mt-2 text-2xl font-semibold tabular-nums text-emerald-200"
+                        >
+                            {{
+                                formatPrice(
+                                    cheapestMapStation.selected_fuel_price,
+                                )
+                            }}
                         </p>
                     </div>
                 </div>
 
-                <div class="relative mt-4 overflow-hidden rounded-xl border border-cyan-300/20 bg-gray-950">
+                <div
+                    class="relative mt-4 overflow-hidden rounded-xl border border-cyan-300/20 bg-gray-950"
+                >
                     <div ref="mapElement" class="h-[34rem] w-full"></div>
 
                     <div
@@ -384,31 +475,53 @@ onBeforeUnmount(() => {
                         class="absolute inset-4 z-[500] flex items-center justify-center rounded-xl border border-dashed border-cyan-300/30 bg-gray-950/85 p-6 text-center backdrop-blur"
                     >
                         <p class="text-sm leading-6 text-slate-200">
-                            Šim degvielas veidam pagaidām nav cenu ar konkrētu pārbaudāmu DUS lokāciju. Cenas joprojām redzamas sarakstā zem kartes.
+                            Šim degvielas veidam pagaidām nav cenu ar konkrētu
+                            pārbaudāmu DUS lokāciju. Cenas joprojām redzamas
+                            sarakstā zem kartes.
                         </p>
                     </div>
                 </div>
             </section>
 
             <div class="grid gap-6">
-                <section class="min-h-[32rem] rounded-2xl border border-white/10 bg-gray-950/[0.72] p-3 shadow-2xl shadow-black/30">
+                <section
+                    class="min-h-[32rem] rounded-2xl border border-white/10 bg-gray-950/[0.72] p-3 shadow-2xl shadow-black/30"
+                >
                     <div class="flex items-center justify-between px-2 pb-3">
-                        <h2 class="text-lg font-semibold text-white">Lētākie cenu ieraksti</h2>
-                        <span class="rounded-full border border-cyan-300/30 px-3 py-1 text-xs font-medium text-cyan-100">
+                        <h2 class="text-lg font-semibold text-white">
+                            Lētākie cenu ieraksti
+                        </h2>
+                        <span
+                            class="rounded-full border border-cyan-300/30 px-3 py-1 text-xs font-medium text-cyan-100"
+                        >
                             {{ groupedPriceRows.length }} rezultāti
                         </span>
                     </div>
 
-                    <div v-if="errorMessage" class="rounded-xl border border-red-400/40 bg-red-400/10 p-4 text-sm text-red-100">
+                    <div
+                        v-if="errorMessage"
+                        class="rounded-xl border border-red-400/40 bg-red-400/10 p-4 text-sm text-red-100"
+                    >
                         {{ errorMessage }}
                     </div>
 
                     <div v-else-if="isLoading" class="grid gap-3">
-                        <div v-for="item in 5" :key="item" class="h-24 animate-pulse rounded-xl bg-white/[0.07]"></div>
+                        <div
+                            v-for="item in 5"
+                            :key="item"
+                            class="h-24 animate-pulse rounded-xl bg-white/[0.07]"
+                        ></div>
                     </div>
 
-                    <div v-else-if="groupedPriceRows.length === 0" class="rounded-xl border border-dashed border-cyan-300/30 p-8 text-center text-slate-300">
-                        Pagaidām nav cenu degvielai {{ fuelTypeLabel(selectedFuelType) }}. Palaid <span class="font-mono text-emerald-200">php artisan fetch:fuel-prices</span>.
+                    <div
+                        v-else-if="groupedPriceRows.length === 0"
+                        class="rounded-xl border border-dashed border-cyan-300/30 p-8 text-center text-slate-300"
+                    >
+                        Pagaidām nav cenu degvielai
+                        {{ fuelTypeLabel(selectedFuelType) }}. Palaid
+                        <span class="font-mono text-emerald-200"
+                            >php artisan fetch:fuel-prices</span
+                        >.
                     </div>
 
                     <ol v-else class="grid gap-3">
@@ -417,37 +530,66 @@ onBeforeUnmount(() => {
                             :key="station.id"
                             class="group rounded-xl border border-white/10 bg-white/[0.04] p-4 transition hover:border-emerald-300/50 hover:bg-white/[0.07]"
                         >
-                            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                            <div
+                                class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"
+                            >
                                 <div class="min-w-0">
-                                    <div class="flex flex-wrap items-center gap-2">
-                                        <span class="flex size-8 items-center justify-center rounded-lg bg-gray-900 text-sm font-semibold text-emerald-200">
+                                    <div
+                                        class="flex flex-wrap items-center gap-2"
+                                    >
+                                        <span
+                                            class="flex size-8 items-center justify-center rounded-lg bg-gray-900 text-sm font-semibold text-emerald-200"
+                                        >
                                             {{ index + 1 }}
                                         </span>
-                                        <span class="rounded-full border px-2.5 py-1 text-xs font-semibold" :class="brandTone(station.brand)">
+                                        <span
+                                            class="rounded-full border px-2.5 py-1 text-xs font-semibold"
+                                            :class="brandTone(station.brand)"
+                                        >
                                             {{ station.brand }}
                                         </span>
-                                        <span class="text-xs text-slate-400">{{ freshnessLabel(station) }}</span>
+                                        <span class="text-xs text-slate-400">{{
+                                            freshnessLabel(station)
+                                        }}</span>
                                     </div>
-                                    <h3 class="mt-3 truncate text-lg font-semibold text-white">{{ station.name }}</h3>
-                                    <p class="mt-1 text-sm text-slate-300">{{ station.address }}</p>
+                                    <h3
+                                        class="mt-3 truncate text-lg font-semibold text-white"
+                                    >
+                                        {{ station.name }}
+                                    </h3>
+                                    <p class="mt-1 text-sm text-slate-300">
+                                        {{ station.address }}
+                                    </p>
                                     <div
                                         v-if="station.is_group"
                                         class="mt-3 rounded-lg border border-white/10 bg-gray-950/60 p-3"
                                     >
-                                        <p class="text-xs font-semibold uppercase text-cyan-100/70">
+                                        <p
+                                            class="text-xs font-semibold uppercase text-cyan-100/70"
+                                        >
                                             Adreses šai cenai
                                         </p>
-                                        <ul class="mt-2 grid gap-1.5 text-sm leading-5 text-slate-300 sm:grid-cols-2">
+                                        <ul
+                                            class="mt-2 grid gap-1.5 text-sm leading-5 text-slate-300 sm:grid-cols-2"
+                                        >
                                             <li
                                                 v-for="address in station.addresses"
                                                 :key="address.id"
                                             >
-                                                <span class="font-semibold text-slate-100">{{ address.name }}</span>
-                                                <span class="block text-xs text-slate-400">{{ address.address }}</span>
+                                                <span
+                                                    class="font-semibold text-slate-100"
+                                                    >{{ address.name }}</span
+                                                >
+                                                <span
+                                                    class="block text-xs text-slate-400"
+                                                    >{{ address.address }}</span
+                                                >
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="mt-3 flex flex-wrap items-center gap-2">
+                                    <div
+                                        class="mt-3 flex flex-wrap items-center gap-2"
+                                    >
                                         <a
                                             v-if="sourceUrl(station)"
                                             :href="sourceUrl(station)"
@@ -469,10 +611,21 @@ onBeforeUnmount(() => {
                                 </div>
 
                                 <div class="text-left sm:text-right">
-                                    <p class="text-3xl font-semibold tabular-nums text-emerald-200">
-                                        {{ formatPrice(station.selected_fuel_price) }}
+                                    <p
+                                        class="text-3xl font-semibold tabular-nums text-emerald-200"
+                                    >
+                                        {{
+                                            formatPrice(
+                                                station.selected_fuel_price,
+                                            )
+                                        }}
                                     </p>
-                                    <p class="mt-1 text-xs uppercase text-slate-400">{{ fuelTypeLabel(selectedFuelType) }} / litrā</p>
+                                    <p
+                                        class="mt-1 text-xs uppercase text-slate-400"
+                                    >
+                                        {{ fuelTypeLabel(selectedFuelType) }} /
+                                        litrā
+                                    </p>
                                 </div>
                             </div>
                         </li>
@@ -552,7 +705,7 @@ onBeforeUnmount(() => {
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
     bottom: -7px;
-    content: '';
+    content: "";
     left: 50%;
     position: absolute;
     transform: translateX(-50%);
