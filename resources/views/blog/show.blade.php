@@ -1,11 +1,11 @@
 @extends('layouts.public')
 
-@section('title', $post['title'].' | Degvielas Cenas')
+@section('title', ($post['seo_title'] ?? $post['title'].' | Degvielas Cenas'))
 @section('description', $post['description'])
 @section('canonical', route('blog.show', $post['slug']))
+@section('og_type', 'article')
 
 @push('head')
-    <meta property="og:type" content="article">
     <meta property="article:published_time" content="{{ $post['published_at'] }}">
     <meta property="article:modified_time" content="{{ $post['updated_at'] }}">
     <script type="application/ld+json">

@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Blogs par degvielas cenām Latvijā | Degvielas Cenas')
-@section('description', 'Praktiski raksti par degvielas cenām Latvijā, cenu salīdzināšanu, brauciena izmaksām un publisko cenu avotu uzticamību.')
+@section('title', 'Degvielas cenu blogs | Padomi autovadītājiem Latvijā')
+@section('description', 'Praktiski SEO raksti par degvielas cenām Latvijā, DUS cenu salīdzināšanu, brauciena izmaksām, atlaidēm un cenu avotu uzticamību.')
 @section('canonical', route('blog.index'))
 
 @push('head')
@@ -9,7 +9,7 @@
         {!! json_encode([
             '@context' => 'https://schema.org',
             '@type' => 'Blog',
-            'name' => 'Degvielas Cenas Latvijā blogs',
+            'name' => 'Degvielas cenu blogs Latvijā',
             'description' => 'Raksti par degvielas cenu salīdzināšanu Latvijā.',
             'url' => route('blog.index'),
             'blogPost' => $posts->map(fn (array $post): array => [
@@ -27,7 +27,7 @@
 @section('content')
     <main class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <section class="max-w-3xl">
-            <h1 class="text-3xl font-semibold tracking-tight text-white sm:text-5xl">Blogs par degvielas cenām Latvijā</h1>
+            <h1 class="text-3xl font-semibold tracking-tight text-white sm:text-5xl">Degvielas cenu blogs Latvijā</h1>
             <p class="mt-4 text-base leading-7 text-cyan-100/80">
                 Praktiski skaidrojumi autovadītājiem: kā salīdzināt cenas, kad lētākā stacija nav izdevīgākā, kā atšķirt oficiālu stacijas cenu no tīkla cenas un kā veidot cenu vēsturi bez izdomātiem datiem.
             </p>

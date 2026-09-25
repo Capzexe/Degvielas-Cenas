@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Par projektu | Degvielas Cenas Latvijā')
-@section('description', 'Uzzini, kā Degvielas Cenas Latvijā apstrādā publiskos cenu avotus, cenu vēsturi un lietotāju ziņojumus.')
+@section('title', 'Par degvielas cenu projektu Latvijā | Datu avoti un uzticamība')
+@section('description', 'Uzzini, kā Degvielas Cenas Latvijā apstrādā publiskos DUS cenu avotus, cenu vēsturi, lietotāju ziņojumus un datu uzticamību.')
 @section('canonical', route('about'))
 
 @push('head')

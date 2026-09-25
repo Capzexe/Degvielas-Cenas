@@ -12,20 +12,28 @@ Route::get('/', function () {
     return redirect()->route('gas.index');
 });
 
-Route::view('/gas', 'gas')->name('gas.index');
-Route::get('/akcijas', fn () => view('discounts', ['offers' => DiscountOffers::all()]))->name('discounts.index');
+Route::redirect('/gas', '/degvielas-cenas', 301);
+Route::redirect('/akcijas', '/degvielas-atlaides', 301);
+Route::redirect('/about', '/par-projektu', 301);
+
+Route::view('/degvielas-cenas', 'gas')->name('gas.index');
+Route::get('/degvielas-atlaides', fn () => view('discounts', ['offers' => DiscountOffers::all()]))->name('discounts.index');
 Route::get('/blog', fn () => view('blog.index', ['posts' => BlogPosts::all()]))->name('blog.index');
 Route::get('/blog/{slug}', function (string $slug) {
     $post = BlogPosts::find($slug);
 
     abort_if($post === null, 404);
 
+    if ($post['slug'] !== $slug) {
+        return redirect()->route('blog.show', $post['slug'], 301);
+    }
+
     return view('blog.show', [
         'post' => $post,
         'posts' => BlogPosts::all(),
     ]);
 })->name('blog.show');
-Route::view('/about', 'about')->name('about');
+Route::view('/par-projektu', 'about')->name('about');
 
 Route::get('/robots.txt', function () {
     $content = implode("\n", [

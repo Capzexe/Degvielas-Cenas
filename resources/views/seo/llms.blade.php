@@ -4,7 +4,8 @@ Degvielas Cenas Latvijā ir latviešu valodā veidots projekts, kas salīdzina p
 
 ## Galvenās lapas
 
-- [Degvielas cenu karte]({{ route('gas.index') }}): interaktīva Latvijas degvielas cenu karte ar avotu norādēm.
+- [Degvielas cenas Latvijā šodien]({{ route('gas.index') }}): interaktīva Latvijas degvielas cenu karte ar avotu norādēm.
+- [Degvielas atlaides Latvijā]({{ route('discounts.index') }}): konkrētas atlaides un akcijas centos par litru.
 - [Blogs]({{ route('blog.index') }}): skaidrojumi par degvielas cenu salīdzināšanu, avotiem un vēsturi.
 - [Par projektu]({{ route('about') }}): projekta datu principi un ierobežojumi.
 - [Sitemap]({{ route('seo.sitemap') }}): XML karte meklētājprogrammām.

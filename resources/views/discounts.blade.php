@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Degvielas atlaides un akcijas Latvijā | Degvielas Cenas')
-@section('description', 'Pārskatāma sadaļa ar degvielas atlaižu kartēm un akcijām Latvijā, kur publiski norādīta konkrēta atlaide centos par litru.')
+@section('title', 'Degvielas atlaides Latvijā | Circle K, Neste, Virši, Viada')
+@section('description', 'Salīdzini degvielas atlaižu kartes un akcijas Latvijā ar konkrētu atlaidi centos litrā Circle K, Neste, Virši, Viada un citos DUS.')
 @section('canonical', route('discounts.index'))
 
 @php

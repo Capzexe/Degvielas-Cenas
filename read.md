@@ -27,7 +27,7 @@ Atstāj arī šo termināli atvērtu.
 Atver mājaslapu:
 
 ```text
-http://127.0.0.1:9000/gas
+http://127.0.0.1:9000/degvielas-cenas
 ```
 
 ## Kā ielādēt reālās publiskās cenas
@@ -75,10 +75,10 @@ npm install
 Mājaslapa:
 
 ```text
-http://127.0.0.1:9000/gas
-http://127.0.0.1:9000/akcijas
+http://127.0.0.1:9000/degvielas-cenas
+http://127.0.0.1:9000/degvielas-atlaides
 http://127.0.0.1:9000/blog
-http://127.0.0.1:9000/about
+http://127.0.0.1:9000/par-projektu
 ```
 
 API:

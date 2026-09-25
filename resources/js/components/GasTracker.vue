@@ -254,7 +254,7 @@ onBeforeUnmount(() => {
             <header class="flex flex-col gap-6 border-b border-white/10 pb-6 lg:flex-row lg:items-end lg:justify-between">
                 <div class="max-w-3xl">
                     <h1 class="text-3xl font-semibold tracking-tight text-white sm:text-5xl">
-                        Latvijas degvielas cenu karte
+                        Degvielas cenas Latvijā šodien
                     </h1>
                     <p class="mt-4 max-w-2xl text-sm leading-6 text-cyan-100/80 sm:text-base">
                         Salīdzini jaunākās zināmās publiskās degvielas cenas Latvijas lielākajos DUS tīklos. Katra cena rāda savu avotu, lai ir skaidrs, vai tā ir konkrētas stacijas cena vai publicēta tīkla cena.

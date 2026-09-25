@@ -19,7 +19,9 @@ class BlogPosts
      */
     public static function find(string $slug): ?array
     {
-        return self::all()->firstWhere('slug', $slug);
+        return self::all()->first(function (array $post) use ($slug): bool {
+            return $post['slug'] === $slug || in_array($slug, $post['aliases'] ?? [], true);
+        });
     }
 
     /**
@@ -29,8 +31,10 @@ class BlogPosts
     {
         return [
             [
-                'slug' => 'ka-salidzinat-degvielas-cenas-latvija',
+                'slug' => 'degvielas-cenas-latvija-ka-salidzinat',
+                'aliases' => ['ka-salidzinat-degvielas-cenas-latvija'],
                 'title' => 'Kā salīdzināt degvielas cenas Latvijā',
+                'seo_title' => 'Kā salīdzināt degvielas cenas Latvijā | Praktisks ceļvedis',
                 'description' => 'Praktisks ceļvedis, kā salīdzināt degvielas cenas Latvijā, nepārmaksāt par braucienu līdz DUS un saprast cenu avotu kvalitāti.',
                 'tag' => 'Padomi',
                 'minutes' => '5 min',
@@ -66,8 +70,10 @@ class BlogPosts
                 ],
             ],
             [
-                'slug' => 'kapec-dus-cenas-interneta-nav-vienadas',
+                'slug' => 'dus-degvielas-cenas-interneta-kapec-atskiras',
+                'aliases' => ['kapec-dus-cenas-interneta-nav-vienadas'],
                 'title' => 'Kāpēc DUS cenas internetā nav vienādas',
+                'seo_title' => 'Kāpēc DUS degvielas cenas internetā atšķiras | Datu avoti',
                 'description' => 'Skaidrojums par to, kāpēc Circle K, Viada, Virši, Straujupīte, Neste un citi tīkli cenas publicē atšķirīgi.',
                 'tag' => 'Datu avoti',
                 'minutes' => '6 min',
@@ -103,8 +109,10 @@ class BlogPosts
                 ],
             ],
             [
-                'slug' => 'benzins-95-98-dizelis-lpg-cenu-salidzinasana',
+                'slug' => 'benzins-95-98-dizelis-lpg-cenas',
+                'aliases' => ['benzins-95-98-dizelis-lpg-cenu-salidzinasana'],
                 'title' => 'Benzīns 95, 98, dīzelis un LPG: ko salīdzināt',
+                'seo_title' => 'Benzīns 95, 98, dīzelis un LPG cenas Latvijā | Ko salīdzināt',
                 'description' => 'Kā pareizi salīdzināt benzīna 95, 98, dīzeļa un LPG cenas Latvijas degvielas cenu kartē.',
                 'tag' => 'Salīdzināšana',
                 'minutes' => '4 min',
@@ -138,8 +146,10 @@ class BlogPosts
                 ],
             ],
             [
-                'slug' => 'ka-veidot-degvielas-cenu-vesturi',
+                'slug' => 'degvielas-cenu-vesture-latvija',
+                'aliases' => ['ka-veidot-degvielas-cenu-vesturi'],
                 'title' => 'Kā veidot degvielas cenu vēsturi',
+                'seo_title' => 'Degvielas cenu vēsture Latvijā | Kā vākt un salīdzināt datus',
                 'description' => 'Kā regulāra cenu importēšana palīdz saprast, vai degvielas cenas Latvijā kāpj, krīt vai paliek stabilas.',
                 'tag' => 'Cenu vēsture',
                 'minutes' => '5 min',

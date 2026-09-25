@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Latvijas degvielas cenu karte | Degvielas Cenas')
-@section('description', 'Skaties jaunākos Latvijas degvielas cenu ierakstus, avotus un cenu vēsturi benzīnam, dīzelim un LPG.')
+@section('title', 'Degvielas cenas Latvijā šodien | Lētākās DUS kartē')
+@section('description', 'Salīdzini aktuālās degvielas cenas Latvijā kartē: 95, 98, dīzelis un LPG no publiski pārbaudāmiem DUS cenu avotiem.')
 @section('canonical', route('gas.index'))
 
 @push('head')
@@ -9,8 +9,8 @@
         {!! json_encode([
             '@context' => 'https://schema.org',
             '@type' => 'WebApplication',
-            'name' => 'Latvijas degvielas cenu karte',
-            'description' => 'Interaktīva Latvijas degvielas cenu karte ar publiski pieejamiem cenu avotiem.',
+            'name' => 'Degvielas cenas Latvijā šodien',
+            'description' => 'Interaktīva Latvijas degvielas cenu karte ar publiski pieejamiem DUS cenu avotiem.',
             'url' => route('gas.index'),
             'applicationCategory' => 'MapApplication',
             'operatingSystem' => 'Web',

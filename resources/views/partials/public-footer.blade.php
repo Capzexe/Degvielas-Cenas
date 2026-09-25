@@ -11,6 +11,7 @@
             <h3 class="text-sm font-semibold text-cyan-100">Sadaļas</h3>
             <div class="mt-3 grid gap-2 text-sm">
                 <a class="text-slate-300 transition hover:text-white" href="{{ route('gas.index') }}">Cenu karte</a>
+                <a class="text-slate-300 transition hover:text-white" href="{{ route('discounts.index') }}">Degvielas atlaides</a>
                 <a class="text-slate-300 transition hover:text-white" href="{{ route('blog.index') }}">Blogs</a>
                 <a class="text-slate-300 transition hover:text-white" href="{{ route('about') }}">Par projektu</a>
             </div>
