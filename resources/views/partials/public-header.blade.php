@@ -30,9 +30,6 @@
             @endforeach
         </div>
 
-        <a href="{{ route('gas.index') }}" class="rounded-xl bg-emerald-300 px-4 py-2 text-sm font-bold text-gray-950 shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-200">
-            Skatīt cenas
-        </a>
     </nav>
 
     <div class="mx-auto flex w-full max-w-7xl gap-2 overflow-x-auto px-4 pb-4 sm:px-6 md:hidden lg:px-8">
