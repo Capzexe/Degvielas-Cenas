@@ -46,7 +46,7 @@ cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\laravel-task-manager"
 Pēc tam atver:
 
 ```text
-http://127.0.0.1:9000/degvielas-cenas
+http://127.0.0.1:9000/
 ```
 
 ## Datu sagatavošana
@@ -79,7 +79,7 @@ Neste un KOOL netiek aizpildīti ar izdomātām cenām. Ja nav droša publiska a
 ## Svarīgākie URL
 
 ```text
-/degvielas-cenas
+/
 /degvielas-atlaides
 /blog
 /par-projektu

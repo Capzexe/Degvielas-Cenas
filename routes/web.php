@@ -8,15 +8,13 @@ use App\Support\DiscountOffers;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return redirect()->route('gas.index');
-});
+Route::view('/', 'gas')->name('gas.index');
 
-Route::redirect('/gas', '/degvielas-cenas', 301);
+Route::redirect('/gas', '/', 301);
+Route::redirect('/degvielas-cenas', '/', 301);
 Route::redirect('/akcijas', '/degvielas-atlaides', 301);
 Route::redirect('/about', '/par-projektu', 301);
 
-Route::view('/degvielas-cenas', 'gas')->name('gas.index');
 Route::get('/degvielas-atlaides', fn () => view('discounts', ['offers' => DiscountOffers::all()]))->name('discounts.index');
 Route::get('/blog', fn () => view('blog.index', ['posts' => BlogPosts::all()]))->name('blog.index');
 Route::get('/blog/{slug}', function (string $slug) {
