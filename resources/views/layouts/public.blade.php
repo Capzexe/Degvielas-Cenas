@@ -8,6 +8,7 @@
         <meta name="robots" content="index, follow">
         <meta name="application-name" content="Degvielas Cenas Latvijā">
         <meta name="theme-color" content="#030712">
+        <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
         <link rel="canonical" href="@yield('canonical', url()->current())">
         <meta property="og:title" content="@yield('title', 'Degvielas cenas Latvijā šodien | Lētākās DUS kartē')">
         <meta property="og:description" content="@yield('description', 'Salīdzini aktuālos Latvijas degvielas cenu ierakstus kartē un atrodi lētāko 95, 98, dīzeļa vai LPG cenu tuvākajās DUS.')">

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="CenaLitrā.lv">
+    <rect width="64" height="64" rx="14" fill="#030712"/>
+    <path d="M17 16h22a4 4 0 0 1 4 4v31H13V20a4 4 0 0 1 4-4Z" fill="#f8fafc"/>
+    <path d="M20 22h16v12H20V22Z" fill="#030712"/>
+    <path d="M26 37h9v6h-9v-6Z" fill="#39ff4a"/>
+    <path d="M43 22h5l5 7v16c0 3-2 5-5 5s-5-2-5-5V34" fill="none" stroke="#22d3ee" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M47 22v-4" stroke="#22d3ee" stroke-width="5" stroke-linecap="round"/>
+</svg>
