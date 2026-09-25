@@ -22,7 +22,68 @@ const markerLayer = ref(null);
 
 const selectedStations = computed(() => stations.value);
 
-const cheapestStation = computed(() => selectedStations.value[0] ?? null);
+const stationGroupKey = (station) => {
+    const price = selectedPrice(station);
+
+    return [
+        station.brand,
+        station.selected_fuel_price,
+        price?.source_type ?? '',
+        price?.source_label ?? '',
+        price?.source_url ?? '',
+    ].join('|');
+};
+
+const groupedPriceRows = computed(() => {
+    const groups = new Map();
+    const rows = [];
+
+    selectedStations.value.forEach((station) => {
+        const canGroup = station.map_location_exact && station.selected_fuel_price !== null;
+        const key = canGroup ? stationGroupKey(station) : `station-${station.id}`;
+
+        if (!groups.has(key)) {
+            const row = {
+                ...station,
+                id: key,
+                station_ids: [station.id],
+                station_count: 1,
+                is_group: false,
+                addresses: [{
+                    id: station.id,
+                    name: station.name,
+                    address: station.address,
+                    latitude: station.latitude,
+                    longitude: station.longitude,
+                }],
+            };
+
+            groups.set(key, row);
+            rows.push(row);
+
+            return;
+        }
+
+        const row = groups.get(key);
+
+        row.station_ids.push(station.id);
+        row.station_count += 1;
+        row.is_group = true;
+        row.name = `${station.brand} - ${row.station_count} stacijas`;
+        row.address = `${row.station_count} adreses ar šo pašu publicēto cenu`;
+        row.addresses.push({
+            id: station.id,
+            name: station.name,
+            address: station.address,
+            latitude: station.latitude,
+            longitude: station.longitude,
+        });
+    });
+
+    return rows;
+});
+
+const cheapestStation = computed(() => groupedPriceRows.value[0] ?? null);
 
 const mapStations = computed(() => selectedStations.value.filter((station) => {
     return station.map_location_exact
@@ -33,7 +94,7 @@ const mapStations = computed(() => selectedStations.value.filter((station) => {
 const cheapestMapStation = computed(() => mapStations.value[0] ?? null);
 
 const averagePrice = computed(() => {
-    const prices = selectedStations.value
+    const prices = groupedPriceRows.value
         .map((station) => station.selected_fuel_price)
         .filter((price) => price !== null);
 
@@ -334,7 +395,7 @@ onBeforeUnmount(() => {
                     <div class="flex items-center justify-between px-2 pb-3">
                         <h2 class="text-lg font-semibold text-white">Lētākie cenu ieraksti</h2>
                         <span class="rounded-full border border-cyan-300/30 px-3 py-1 text-xs font-medium text-cyan-100">
-                            {{ selectedStations.length }} rezultāti
+                            {{ groupedPriceRows.length }} rezultāti
                         </span>
                     </div>
 
@@ -346,13 +407,13 @@ onBeforeUnmount(() => {
                         <div v-for="item in 5" :key="item" class="h-24 animate-pulse rounded-xl bg-white/[0.07]"></div>
                     </div>
 
-                    <div v-else-if="selectedStations.length === 0" class="rounded-xl border border-dashed border-cyan-300/30 p-8 text-center text-slate-300">
+                    <div v-else-if="groupedPriceRows.length === 0" class="rounded-xl border border-dashed border-cyan-300/30 p-8 text-center text-slate-300">
                         Pagaidām nav cenu degvielai {{ fuelTypeLabel(selectedFuelType) }}. Palaid <span class="font-mono text-emerald-200">php artisan fetch:fuel-prices</span>.
                     </div>
 
                     <ol v-else class="grid gap-3">
                         <li
-                            v-for="(station, index) in selectedStations"
+                            v-for="(station, index) in groupedPriceRows"
                             :key="station.id"
                             class="group rounded-xl border border-white/10 bg-white/[0.04] p-4 transition hover:border-emerald-300/50 hover:bg-white/[0.07]"
                         >
@@ -369,6 +430,23 @@ onBeforeUnmount(() => {
                                     </div>
                                     <h3 class="mt-3 truncate text-lg font-semibold text-white">{{ station.name }}</h3>
                                     <p class="mt-1 text-sm text-slate-300">{{ station.address }}</p>
+                                    <div
+                                        v-if="station.is_group"
+                                        class="mt-3 rounded-lg border border-white/10 bg-gray-950/60 p-3"
+                                    >
+                                        <p class="text-xs font-semibold uppercase text-cyan-100/70">
+                                            Adreses šai cenai
+                                        </p>
+                                        <ul class="mt-2 grid gap-1.5 text-sm leading-5 text-slate-300 sm:grid-cols-2">
+                                            <li
+                                                v-for="address in station.addresses"
+                                                :key="address.id"
+                                            >
+                                                <span class="font-semibold text-slate-100">{{ address.name }}</span>
+                                                <span class="block text-xs text-slate-400">{{ address.address }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
                                     <div class="mt-3 flex flex-wrap items-center gap-2">
                                         <a
                                             v-if="sourceUrl(station)"
