@@ -17,7 +17,7 @@
 @push('head')
     <script type="application/ld+json">
         {!! json_encode([
-            '@context' => 'https://schema.org',
+            chr(64).'context' => 'https://schema.org',
             '@type' => 'CollectionPage',
             'name' => 'Degvielas atlaides un akcijas Latvijā',
             'description' => 'Degvielas atlaižu un lojalitātes piedāvājumu saraksts ar konkrētām centi/l atlaidēm.',

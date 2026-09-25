@@ -10,7 +10,7 @@
     <meta property="article:modified_time" content="{{ $post['updated_at'] }}">
     <script type="application/ld+json">
         {!! json_encode([
-            '@context' => 'https://schema.org',
+            chr(64).'context' => 'https://schema.org',
             '@type' => 'BlogPosting',
             'headline' => $post['title'],
             'description' => $post['description'],
@@ -32,7 +32,7 @@
     </script>
     <script type="application/ld+json">
         {!! json_encode([
-            '@context' => 'https://schema.org',
+            chr(64).'context' => 'https://schema.org',
             '@type' => 'FAQPage',
             'mainEntity' => collect($post['faq'])->map(fn (array $faq): array => [
                 '@type' => 'Question',

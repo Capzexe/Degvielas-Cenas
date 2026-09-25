@@ -7,7 +7,7 @@
 @push('head')
     <script type="application/ld+json">
         {!! json_encode([
-            '@context' => 'https://schema.org',
+            chr(64).'context' => 'https://schema.org',
             '@type' => 'Blog',
             'name' => 'Degvielas cenu blogs Latvijā',
             'description' => 'Raksti par degvielas cenu salīdzināšanu Latvijā.',

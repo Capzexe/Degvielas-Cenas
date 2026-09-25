@@ -7,7 +7,7 @@
 @push('head')
     <script type="application/ld+json">
         {!! json_encode([
-            '@context' => 'https://schema.org',
+            chr(64).'context' => 'https://schema.org',
             '@type' => 'AboutPage',
             'name' => 'Par Degvielas Cenas Latvijā projektu',
             'description' => 'Informācija par degvielas cenu datu principiem, avotiem un ierobežojumiem Latvijā.',

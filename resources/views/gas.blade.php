@@ -7,7 +7,7 @@
 @push('head')
     <script type="application/ld+json">
         {!! json_encode([
-            '@context' => 'https://schema.org',
+            chr(64).'context' => 'https://schema.org',
             '@type' => 'WebApplication',
             'name' => 'Degvielas cenas Latvijā šodien',
             'description' => 'Interaktīva Latvijas degvielas cenu karte ar publiski pieejamiem DUS cenu avotiem.',
