@@ -42,7 +42,7 @@
         <section class="max-w-3xl">
             <h1 class="text-3xl font-semibold tracking-tight text-white sm:text-5xl">Degvielas atlaides un akcijas Latvijā</h1>
             <p class="mt-4 text-base leading-7 text-cyan-100/80">
-                Šeit ir tikai tie piedāvājumi, kur publiski norādīta konkrēta atlaide centos par litru vai skaidrs cents/l ieguvums. Piedāvājumi bez konkrēta cipara nav iekļauti.
+                Uzzini par jaunākajām DUS tīklu akcijām un ietaupi vairāk, izmantojot staciju lojalitātes programmas.
             </p>
         </section>
 

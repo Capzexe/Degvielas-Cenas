@@ -3,7 +3,7 @@
         <div>
             <h2 class="text-lg font-semibold text-white">Degvielas Cenas Latvijā</h2>
             <p class="mt-3 max-w-xl text-sm leading-6 text-slate-300">
-                Projekts salīdzina publiski pieejamus cenu ierakstus un skaidri norāda avotu. Ja cena nav droši nolasāma, labāk rādām tukšu vietu nekā maldinošu ciparu.
+                Projekts, kas salīdzina publiski pieejamus cenu ierakstus un skaidri norāda avotu. Mūsu mērķis ir palīdzēt tev ietaupīt, nodrošinot caurskatāmus datus. Ja cena nav droša, mēs rādām tukšu vietu, nevis maldinošu ciparu.
             </p>
         </div>
 
@@ -20,7 +20,7 @@
         <div>
             <h3 class="text-sm font-semibold text-cyan-100">Datu statuss</h3>
             <p class="mt-3 text-sm leading-6 text-slate-300">
-                Neste un daļa DUS tīklu nepublicē pilnu staciju cenu plūsmu. Šādi ieraksti jāapstrādā ar lietotāju ziņojumiem vai partnera API.
+                Informācija tiek apkopota no publiskiem avotiem. Cenas uzpildes stacijās var mainīties, tāpēc vienmēr pārliecinies par cenu pirms uzpildes.
             </p>
         </div>
     </div>
