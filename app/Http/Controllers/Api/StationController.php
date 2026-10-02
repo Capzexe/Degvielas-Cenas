@@ -68,7 +68,8 @@ class StationController extends Controller
                     ])->values(),
                 ];
             })->values(),
-        ]);
+        ])->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache');
     }
 
     private function hasExactMapLocation(Station $station, ?string $sourceType): bool

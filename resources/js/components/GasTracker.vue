@@ -302,6 +302,7 @@ const fetchStations = async () => {
   try {
     const response = await fetch(
       `/api/stations/cheapest?fuel_type=${encodeURIComponent(selectedFuelType.value)}`,
+      { cache: "no-store" },
     );
 
     if (!response.ok) {
