@@ -232,15 +232,15 @@ class FetchFuelPrices extends Command
             ->where('source_type', 'test_data')
             ->delete();
 
-        // Viada's E85 row was previously imported as Diesel because the source
-        // table header was counted as a price row. Remove those invalid legacy
-        // records before the corrected mapping writes the current prices.
+        // Viada's E85 and Diesel Multi rows were previously imported as plain
+        // Diesel. Remove those invalid legacy records before the corrected
+        // mapping writes the current prices.
         FuelPrice::query()
             ->where('fuel_type', 'Diesel')
             ->where('source_type', 'official_station')
             ->whereHas('station', fn ($query) => $query
                 ->where('brand', 'Viada')
-                ->whereIn('name', ['Viada Astras', 'Viada Vecmīlgrāvis']))
+                ->whereNotIn('name', ['Viada Dārzciema', 'Viada Dārzciema 2']))
             ->delete();
 
         FuelPrice::query()

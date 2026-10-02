@@ -34,7 +34,10 @@ class LatvianFuelPriceSources
                     '98' => ['98E', '98'],
                     'Diesel' => ['DD', 'Dīzeļdegviela', 'Diesel'],
                     'LPG' => ['LPG', 'Autogāze'],
-                    '_row_order' => ['95', '95', '98', 'Diesel', 'Diesel', 'LPG', null],
+                    // Viada's Diesel Multi is a separate product. The public
+                    // tracker has only one Diesel category, so import only
+                    // the plain D row rather than labelling Multi as Diesel.
+                    '_row_order' => ['95', '95', '98', 'Diesel', null, 'LPG', null],
                 ],
             ],
             [
