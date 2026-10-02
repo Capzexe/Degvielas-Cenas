@@ -385,6 +385,27 @@ onBeforeUnmount(() => {
               {{ formatPrice(averagePrice) }}
             </p>
           </div>
+          <button
+            type="button"
+            class="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/[0.06] px-4 py-3 text-sm font-semibold text-white transition hover:border-emerald-300/60 hover:bg-emerald-300/10 disabled:cursor-wait disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+            :disabled="isLoading"
+            :aria-label="isLoading ? 'Cenas tiek atjauninātas' : 'Atjaunināt cenas'"
+            @click="fetchStations"
+          >
+            <svg
+              class="mr-2 size-4"
+              :class="{ 'animate-spin': isLoading }"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 5v4h4" />
+              <path d="M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4" />
+            </svg>
+            {{ isLoading ? "Atjaunina..." : "Atjaunināt cenas" }}
+          </button>
         </div>
       </header>
 
