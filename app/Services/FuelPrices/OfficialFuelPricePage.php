@@ -70,6 +70,10 @@ class OfficialFuelPricePage
             $this->writeDebug($debugName, $url, $html, $text);
         }
 
+        if (str_contains($url, 'straujupite.lv')) {
+            return $this->straujupitePublishedPrices($text);
+        }
+
         $prices = $this->pricesFromFuelSectionSequence($text, $fuelLabels);
 
         if ($prices !== []) {
@@ -331,6 +335,32 @@ class OfficialFuelPricePage
         }
 
         return array_values($stations);
+    }
+
+    /**
+     * Straujupīte currently publishes only the fuel types present in its
+     * labelled price cards. Do not use the generic label scanner here: its
+     * broad `98` match can pick up unrelated interface text as a fuel price.
+     *
+     * @return array<string, float>
+     */
+    private function straujupitePublishedPrices(string $text): array
+    {
+        $prices = [];
+
+        foreach (['95' => 'Benzīns 95', 'Diesel' => 'Dīzeļdegviela'] as $fuelType => $label) {
+            if (! preg_match('/'.preg_quote($label, '/').'.{0,180}?Degvielas cena\s+([0-9]+[,.][0-9]{3})\s*€/iu', $text, $match)) {
+                continue;
+            }
+
+            $price = (float) str_replace(',', '.', $match[1]);
+
+            if ($this->isPlausiblePrice($fuelType, $price)) {
+                $prices[$fuelType] = $price;
+            }
+        }
+
+        return $prices;
     }
 
     /**
