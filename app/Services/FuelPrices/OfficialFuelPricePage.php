@@ -236,10 +236,14 @@ class OfficialFuelPricePage
                 continue;
             }
 
+            if (! preg_match('/([0-9]+[,.][0-9]{3})\s*EUR/iu', $row, $priceMatch)) {
+                continue;
+            }
+
             $fuelType = $rowOrder[$dataRowIndex] ?? null;
             $dataRowIndex++;
 
-            if ($fuelType === null || ! preg_match('/([0-9]+[,.][0-9]{3})\s*EUR/iu', $row, $priceMatch)) {
+            if ($fuelType === null) {
                 continue;
             }
 

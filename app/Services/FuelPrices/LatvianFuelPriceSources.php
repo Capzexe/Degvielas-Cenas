@@ -34,7 +34,7 @@ class LatvianFuelPriceSources
                     '98' => ['98E', '98'],
                     'Diesel' => ['DD', 'Dīzeļdegviela', 'Diesel'],
                     'LPG' => ['LPG', 'Autogāze'],
-                    '_row_order' => ['95', '95', '98', 'Diesel', 'Diesel', 'LPG', 'Diesel'],
+                    '_row_order' => ['95', '95', '98', 'Diesel', 'Diesel', 'LPG', null],
                 ],
             ],
             [
