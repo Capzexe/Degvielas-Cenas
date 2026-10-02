@@ -71,7 +71,7 @@ class OfficialFuelPricePage
         }
 
         if (str_contains($url, 'straujupite.lv')) {
-            return $this->straujupitePublishedPrices($text);
+            return $this->straujupitePublishedPrices($html);
         }
 
         $prices = $this->pricesFromFuelSectionSequence($text, $fuelLabels);
@@ -344,17 +344,17 @@ class OfficialFuelPricePage
      *
      * @return array<string, float>
      */
-    private function straujupitePublishedPrices(string $text): array
+    private function straujupitePublishedPrices(string $html): array
     {
         $prices = [];
 
         $patterns = [
-            '95' => '/\b95\b.{0,180}?Degvielas cena\s+([0-9]+[,.][0-9]{3})\s*€/iu',
-            'Diesel' => '/\bDD\b.{0,180}?Degvielas cena\s+([0-9]+[,.][0-9]{3})\s*€/iu',
+            '95' => '/sj-fname">Benz[^<]*95<\/span>.*?sj-fprice">([0-9]+[,.][0-9]{3})/is',
+            'Diesel' => '/sj-fname">D[^<]*<\/span>.*?sj-fprice">([0-9]+[,.][0-9]{3})/is',
         ];
 
         foreach ($patterns as $fuelType => $pattern) {
-            if (! preg_match($pattern, $text, $match)) {
+            if (! preg_match($pattern, $html, $match)) {
                 continue;
             }
 
