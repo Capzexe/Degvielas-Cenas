@@ -348,8 +348,13 @@ class OfficialFuelPricePage
     {
         $prices = [];
 
-        foreach (['95' => 'Benzīns 95', 'Diesel' => 'Dīzeļdegviela'] as $fuelType => $label) {
-            if (! preg_match('/'.preg_quote($label, '/').'.{0,180}?Degvielas cena\s+([0-9]+[,.][0-9]{3})\s*€/iu', $text, $match)) {
+        $patterns = [
+            '95' => '/\b95\b.{0,180}?Degvielas cena\s+([0-9]+[,.][0-9]{3})\s*€/iu',
+            'Diesel' => '/\bDD\b.{0,180}?Degvielas cena\s+([0-9]+[,.][0-9]{3})\s*€/iu',
+        ];
+
+        foreach ($patterns as $fuelType => $pattern) {
+            if (! preg_match($pattern, $text, $match)) {
                 continue;
             }
 
