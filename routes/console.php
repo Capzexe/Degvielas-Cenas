@@ -8,4 +8,7 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('fetch:fuel-prices')->everyThirtyMinutes();
+Schedule::command('fetch:fuel-prices')
+    ->everySixHours()
+    ->timezone('Europe/Riga')
+    ->withoutOverlapping();

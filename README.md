@@ -197,13 +197,13 @@ php artisan view:cache
 
 If Vue, CSS, logo, favicon, or other public assets change, upload or copy the updated `public/build`, `public/images`, and favicon files to the hosting public folder.
 
-For automatic refresh, add a cron job:
+For automatic refresh, add this cron job to run Laravel's scheduler every minute. Laravel will then fetch fuel prices automatically every six hours (00:00, 06:00, 12:00, and 18:00 in Latvia):
 
 ```bash
-php /home/USER/domains/DOMAIN/artisan schedule:run
+* * * * * php /home/USER/domains/DOMAIN/artisan schedule:run >> /dev/null 2>&1
 ```
 
-or run the fuel command directly:
+To test the importer manually, run:
 
 ```bash
 php /home/USER/domains/DOMAIN/artisan fetch:fuel-prices

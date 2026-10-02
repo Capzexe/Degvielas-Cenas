@@ -26,6 +26,7 @@ const errorMessage = ref("");
 const mapElement = ref(null);
 const map = ref(null);
 const markerLayer = ref(null);
+let refreshInterval = null;
 
 const selectedStations = computed(() => stations.value);
 
@@ -325,9 +326,14 @@ watch(stations, renderMapMarkers);
 onMounted(async () => {
   await initializeMap();
   await fetchStations();
+  refreshInterval = window.setInterval(fetchStations, 5 * 60 * 1000);
 });
 
 onBeforeUnmount(() => {
+  if (refreshInterval !== null) {
+    window.clearInterval(refreshInterval);
+  }
+
   if (map.value) {
     map.value.remove();
   }
