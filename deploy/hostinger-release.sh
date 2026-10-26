@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Usage: bash hostinger-release.sh APP_ROOT EXPECTED_COMMIT ASSET_ARCHIVE
+# Usage: bash hostinger-release.sh APP_ROOT EXPECTED_COMMIT ASSET_ARCHIVE [GIT_BUNDLE]
 set -Eeuo pipefail
 umask 077
 
@@ -15,7 +15,13 @@ cd "$app_root"
 exec 9>storage/framework/deployment.lock
 flock -n 9 || { echo 'Another deployment is running'; exit 1; }
 git diff --quiet && git diff --cached --quiet || { echo 'Tracked server changes require review'; exit 1; }
-git fetch origin main
+if [[ -n ${4:-} ]]; then
+    # Transfer private repositories without copying GitHub credentials to hosting.
+    git bundle verify "$4"
+    git fetch "$4" refs/heads/main:refs/remotes/origin/main
+else
+    git fetch origin main
+fi
 [[ $(git rev-parse origin/main) == "$expected_commit" ]] || { echo 'Remote head changed; review the new commit first'; exit 1; }
 git merge-base --is-ancestor HEAD "$expected_commit"
 

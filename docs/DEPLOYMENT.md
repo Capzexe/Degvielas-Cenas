@@ -28,6 +28,8 @@ ssh -p 65002 USER@HOST 'bash /tmp/hostinger-release.sh /home/u522832521/domains/
 
 Use explicit `-i`, `BatchMode=yes`, `StrictHostKeyChecking=yes` and the correct account for automated connections. The helper does not delete old hashed assets, preventing broken in-flight pages. A failed release leaves maintenance mode enabled for deliberate recovery; investigate the error before reopening traffic.
 
+If the private repository is not authenticated on the server, transfer a Git bundle over the same SSH connection instead of copying a GitHub token to hosting. Locally run `git bundle create RELEASE.bundle main ^VERIFIED_SERVER_COMMIT`, upload it, and pass its absolute server path as the helper's fourth argument. The server verifies the bundle prerequisites and still checks the expected full SHA before fast-forwarding. This transports committed history only; `.env` and other ignored local files are excluded. A fetch/preflight failure occurs before maintenance mode starts.
+
 ## Verify the live release
 
 - Home, blog, discount and about pages return 200; APIs return valid data.

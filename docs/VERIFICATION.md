@@ -2,7 +2,7 @@
 
 ## Local verification
 
-- Laravel feature suite: all tests pass against in-memory SQLite; includes rendering/header checks, CSP nonce matching, HTTPS/canonical-host checks, untrusted forwarded headers, public import denial, nested input validation, both API throttles, latest-price ordering, history bounds, mass-assignment allowlists and private storage.
+- Laravel feature suite: 14 tests pass with 180 assertions against in-memory SQLite; includes rendering/header checks, CSP nonce matching, HTTPS/canonical-host checks, untrusted forwarded headers, public import denial, importer overlap protection, production configuration fail-safes, nested input validation, both API throttles, latest-price ordering, history bounds, mass-assignment allowlists and private storage.
 - JavaScript: two tests pass for popup payload escaping and rejection of dangerous source URL schemes.
 - Production Vite build succeeds using patched Vite 7.3.7.
 - Laravel Pint passes for changed PHP files and all added middleware, requests and security tests.
