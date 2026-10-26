@@ -5,7 +5,7 @@
 - Laravel feature suite: 14 tests pass with 180 assertions against in-memory SQLite; includes rendering/header checks, CSP nonce matching, HTTPS/canonical-host checks, untrusted forwarded headers, public import denial, importer overlap protection, production configuration fail-safes, nested input validation, both API throttles, latest-price ordering, history bounds, mass-assignment allowlists and private storage.
 - JavaScript: two tests pass for popup payload escaping and rejection of dangerous source URL schemes.
 - Production Vite build succeeds using patched Vite 7.3.7.
-- Laravel Pint passes for changed PHP files and all added middleware, requests and security tests.
+- Laravel Pint passes for the full PHP codebase. The empty template unit-test suite was removed so a fresh checkout can run the feature suite without a missing-directory error.
 - `composer validate --strict` passes; the pre-existing manifest/lock mismatch is resolved.
 - `composer audit`: zero known advisories after updates, including league/commonmark 2.10.4 and symfony/http-foundation 7.4.21.
 - `npm audit`: zero known vulnerabilities after compatible updates, including Vite, shell-quote, source-map-js and follow-redirects.
