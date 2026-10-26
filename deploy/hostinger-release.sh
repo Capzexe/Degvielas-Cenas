@@ -39,7 +39,9 @@ printf 'Rollback backup: %s\n' "$backup"
 # On failure leave maintenance mode enabled for operator review and rollback.
 php artisan down --retry=60
 git merge --ff-only "$expected_commit"
-composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-progress
+composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-progress --no-scripts
+# Hostinger disables proc_open in CLI too; run the required hook directly.
+php artisan package:discover --ansi
 
 # Align only security-related environment flags. Preserve keys and DB credentials.
 php <<'PHP'

@@ -2,13 +2,15 @@
 
 The existing server checkout is `/home/u522832521/domains/olivedrab-falcon-903315.hostingersite.com`. Only its `public_html/` directory is web-accessible; the app and `.env` remain in its parent. The repository's `public/` directory is the asset source. Do not upload the whole checkout into `public_html`.
 
+Hostinger disables `proc_open` even in CLI. The release helper preserves this restriction by installing with Composer `--no-scripts` and running `php artisan package:discover` directly. Review and explicitly run any newly added required Composer hook rather than silently skipping it.
+
 ## Before a release
 
 1. Review the diff and run the checks in README. Use current supported PHP releases locally and on the web/CLI runtimes. Run `composer audit` and `npm audit`; do not suppress advisories just to pass.
 2. Confirm the production `APP_URL` is the canonical HTTPS URL and `APP_ENV=production`, `APP_DEBUG=false`. Preserve `APP_KEY`, database credentials and existing data. Set `TRUSTED_PROXIES` only to verified proxy addresses if the hosting topology requires it; do not trust arbitrary forwarded headers.
 3. In hPanel, apply the web-runtime directives from `deploy/php-production.ini` where the plan permits. System-only controls such as disabled process functions cannot be installed by `.user.ini`. Test any `open_basedir` change with real CA, temporary and application paths. Keep CLI Composer/process access separate.
 4. Maintain database backups through Hostinger before schema changes. This hardening release adds no schema migration. The script backs up the public directory and environment; those backups are not database backups.
-5. Build assets, commit the application changes, push the reviewed commit, and note its full SHA. `public/build` contains historical tracked assets even though it is now ignored; force-add the newly built output deliberately when committing a release. Never force-add `.env` or `vendor`.
+5. Build assets, commit the application changes including the versioned `public/build`, push the reviewed commit, and note its full SHA. Assets are committed because this Hostinger deployment has no Node build runtime. Never force-add `.env` or `vendor`.
 
 ## Release helper
 
@@ -48,7 +50,8 @@ cd /home/u522832521/domains/olivedrab-falcon-903315.hostingersite.com
 php artisan down --retry=60
 # Read and verify the recorded SHA first. No reset --hard is necessary.
 git checkout --detach VERIFIED_PREVIOUS_SHA
-composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-scripts
+php artisan package:discover
 cp VERIFIED_BACKUP/environment.backup .env
 chmod 600 .env
 tar -xzf VERIFIED_BACKUP/public-html.tar.gz
