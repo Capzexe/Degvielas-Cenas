@@ -1,5 +1,7 @@
 name: Refresh fuel prices
 
+permissions: {}
+
 on:
   schedule:
     # Every six hours. GitHub Actions schedules use UTC.
@@ -26,10 +28,11 @@ jobs:
           printf '%s\n' "$HOSTINGER_SSH_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keygen -y -f ~/.ssh/id_ed25519 > /dev/null
-          ssh-keyscan -p 65002 -H 46.17.175.181 >> ~/.ssh/known_hosts
+          # Pinned from the existing, authenticated Hostinger connection.
+          printf '%s\n' '[46.17.175.181]:65002 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEcKKWXUli96TX+ay2Wx8fAZkrfa3xcQw1OGmfVHaaZ1' > ~/.ssh/known_hosts
 
       - name: Import current fuel prices
         run: |
-          ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -p 65002 \
+          ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes -p 65002 \
             u522832521@46.17.175.181 \
             'cd /home/u522832521/domains/olivedrab-falcon-903315.hostingersite.com && php artisan fetch:fuel-prices'

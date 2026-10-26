@@ -9,6 +9,7 @@ import {
 } from "vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { popupContent, safeSourceUrl } from "../security.js";
 
 const fuelTypes = ["Diesel", "95", "98", "LPG"];
 
@@ -22,7 +23,6 @@ const fuelTypeLabels = {
 const selectedFuelType = ref(fuelTypes[0]);
 const stations = ref([]);
 const isLoading = ref(false);
-const isRefreshingPrices = ref(false);
 const errorMessage = ref("");
 const mapElement = ref(null);
 const map = ref(null);
@@ -171,7 +171,7 @@ const sourceLabel = (station) => {
   return selectedPrice(station)?.source_label ?? "Avots nav zināms";
 };
 
-const sourceUrl = (station) => selectedPrice(station)?.source_url ?? null;
+const sourceUrl = (station) => safeSourceUrl(selectedPrice(station)?.source_url);
 
 const sourceTone = (station) => {
   const sourceType = selectedPrice(station)?.source_type;
@@ -207,15 +207,13 @@ const markerIcon = (station, isCheapest = false) =>
     popupAnchor: [0, -44],
   });
 
-const popupHtml = (station, isCheapest) => `
-    <div class="fuel-map-popup">
-        <p class="fuel-map-popup__rank">${isCheapest ? "Lētākā cena" : station.brand}</p>
-        <strong>${station.name}</strong>
-        <span>${station.address}</span>
-        <b>${formatPrice(station.selected_fuel_price)} / ${fuelTypeLabel(selectedFuelType.value)}</b>
-        <small>${sourceLabel(station)}</small>
-    </div>
-`;
+const popupHtml = (station, isCheapest) => popupContent({
+  rank: isCheapest ? "Lētākā cena" : station.brand,
+  name: station.name,
+  address: station.address,
+  price: `${formatPrice(station.selected_fuel_price)} / ${fuelTypeLabel(selectedFuelType.value)}`,
+  source: sourceLabel(station),
+});
 
 const initializeMap = async () => {
   await nextTick();
@@ -322,32 +320,6 @@ const fetchStations = async () => {
   }
 };
 
-const refreshPrices = async () => {
-  isRefreshingPrices.value = true;
-  errorMessage.value = "";
-
-  try {
-    const response = await fetch("/api/prices/refresh", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-      },
-    });
-    const payload = await response.json();
-
-    if (!response.ok) {
-      throw new Error(payload.message ?? "Neizdevās atjaunināt cenas.");
-    }
-
-    await fetchStations();
-  } catch (error) {
-    errorMessage.value =
-      error.message ?? "Neizdevās atjaunināt cenas. Lūdzu, mēģini vēlreiz.";
-  } finally {
-    isRefreshingPrices.value = false;
-  }
-};
-
 watch(selectedFuelType, fetchStations);
 watch(stations, renderMapMarkers);
 
@@ -416,13 +388,13 @@ onBeforeUnmount(() => {
           <button
             type="button"
             class="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/[0.06] px-4 py-3 text-sm font-semibold text-white transition hover:border-emerald-300/60 hover:bg-emerald-300/10 disabled:cursor-wait disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-emerald-300"
-            :disabled="isRefreshingPrices"
-            :aria-label="isRefreshingPrices ? 'Cenas tiek atjauninātas' : 'Atjaunināt cenas'"
-            @click="refreshPrices"
+            :disabled="isLoading"
+            :aria-label="isLoading ? 'Dati tiek ielādēti' : 'Pārlādēt datus'"
+            @click="fetchStations"
           >
             <svg
               class="mr-2 size-4"
-              :class="{ 'animate-spin': isRefreshingPrices }"
+              :class="{ 'animate-spin': isLoading }"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -432,7 +404,7 @@ onBeforeUnmount(() => {
               <path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 5v4h4" />
               <path d="M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4" />
             </svg>
-            {{ isRefreshingPrices ? "Atjaunina..." : "Atjaunināt cenas" }}
+            {{ isLoading ? "Ielādē..." : "Pārlādēt datus" }}
           </button>
         </div>
       </header>
@@ -551,10 +523,7 @@ onBeforeUnmount(() => {
             class="rounded-xl border border-dashed border-cyan-300/30 p-8 text-center text-slate-300"
           >
             Pagaidām nav cenu degvielai
-            {{ fuelTypeLabel(selectedFuelType) }}. Palaid
-            <span class="font-mono text-emerald-200"
-              >php artisan fetch:fuel-prices</span
-            >.
+            {{ fuelTypeLabel(selectedFuelType) }}. Lūdzu, pārbaudi vēlāk.
           </div>
 
           <ol v-else class="grid gap-3">

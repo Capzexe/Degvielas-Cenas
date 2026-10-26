@@ -7,9 +7,10 @@ use App\Models\Station;
 use App\Services\FuelPrices\LatvianFuelPriceSources;
 use App\Services\FuelPrices\OfficialFuelPricePage;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Support\Carbon;
 use Throwable;
 
 class FetchFuelPrices extends Command
@@ -20,6 +21,22 @@ class FetchFuelPrices extends Command
     protected $description = 'Ielasa Latvijas degvielas cenas no oficiālajām publiskajām lapām, kur tas ir iespējams.';
 
     public function handle(OfficialFuelPricePage $pricePage, LatvianFuelPriceSources $sources): int
+    {
+        // GitHub Actions and the Laravel scheduler share this lock.
+        $result = Cache::lock('fuel-prices:import', 3600)->get(
+            fn (): int => $this->import($pricePage, $sources),
+        );
+
+        if ($result === false) {
+            $this->info('Cenu imports jau darbojas.');
+
+            return self::SUCCESS;
+        }
+
+        return $result;
+    }
+
+    private function import(OfficialFuelPricePage $pricePage, LatvianFuelPriceSources $sources): int
     {
         $fetchedAt = Carbon::now();
         $this->seedStations($sources);

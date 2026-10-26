@@ -3,19 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PriceHistoryRequest;
 use App\Models\FuelPrice;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class PriceHistoryController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function index(PriceHistoryRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'fuel_type' => ['required', Rule::in(['95', '98', 'Diesel', 'LPG'])],
-            'days' => ['nullable', 'integer', 'min:1', 'max:365'],
-        ]);
+        $validated = $request->validated();
 
         $fuelType = $validated['fuel_type'];
         $days = (int) ($validated['days'] ?? 90);
@@ -26,8 +22,14 @@ class PriceHistoryController extends Controller
             ->where('source_type', '!=', 'test_data')
             ->where('fetched_at', '>=', now()->subDays($days))
             ->whereBetween('price', $this->plausibleRange($fuelType))
-            ->orderBy('fetched_at')
+            ->whereHas('station')
+            ->orderByDesc('fetched_at')
+            ->orderByDesc('id')
+            ->limit(10001)
             ->get();
+
+        $truncated = $prices->count() > 10000;
+        $prices = $prices->take(10000)->reverse()->values();
 
         $series = $prices
             ->groupBy(fn (FuelPrice $price) => $price->station->brand.' - '.$price->station->name)
@@ -48,6 +50,7 @@ class PriceHistoryController extends Controller
         return response()->json([
             'fuel_type' => $fuelType,
             'days' => $days,
+            'truncated' => $truncated,
             'series' => $series,
         ]);
     }

@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\EnforceHttps;
+use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\TrustProxies;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,7 +15,9 @@ $app = Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->prepend(SecurityHeaders::class);
+        $middleware->append(EnforceHttps::class);
+        $middleware->replace(Illuminate\Http\Middleware\TrustProxies::class, TrustProxies::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

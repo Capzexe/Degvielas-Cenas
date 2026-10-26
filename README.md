@@ -1,244 +1,138 @@
-# CenaLitrā.lv
+# CenaLitrā.lv — public fuel-price comparison for Latvia
 
-CenaLitrā.lv is a Laravel and Vue web application for tracking publicly available fuel prices in Latvia. It shows the cheapest known prices by fuel type, displays station locations on a map, lists fuel discount offers, and includes SEO pages for long-term organic traffic.
+CenaLitrā helps Latvian drivers compare published petrol, diesel and LPG prices before deciding where to refuel. It combines source-labelled prices, station locations and loyalty discounts in one Latvian-language website. Observations from public sources do not guarantee the price at the pump.
 
-The project is intentionally conservative with data: if a station chain does not publish a reliable price source, the app does not invent prices.
+**Live website:** [CenaLitrā on Hostinger](https://olivedrab-falcon-903315.hostingersite.com/)
 
-## Features
+## Key features
 
-- Cheapest fuel prices for 95, 98, diesel, and LPG.
-- Full-width interactive station map with Leaflet.
-- Public Latvian UI with dark theme and CenaLitrā branding.
-- Real price collection from supported public sources.
-- Historical price records stored on every fetch.
-- Fuel discount page with only concrete, usable offers.
-- SEO blog, about page, sitemap, robots.txt, and llms.txt.
-- JSON API endpoints for the Vue frontend.
+- **Price comparison:** compare 95, 98, Diesel and LPG with source labels and observation times.
+- **Interactive map:** Leaflet and OpenStreetMap show verified station locations; network-wide and published minimum prices remain clearly labelled.
+- **Automated collection:** source-specific parsers collect Circle K, Viada, Virši and Straujupīte prices every six hours where parsing succeeds. Missing or unsupported data is not fabricated.
+- **Useful context:** loyalty discounts, Latvian articles, structured data, sitemap and crawler metadata.
+- **History API:** retrieve up to one year of observations with bounded results and explicit truncation metadata.
 
-## Tech Stack
+## Tech stack
 
-- Laravel 12
-- PHP 8.2+
-- Vue 3 Composition API
-- Tailwind CSS
-- Vite
-- Leaflet
-- SQLite for local development
-- MySQL-compatible hosting for production
+| Layer | Technology |
+| --- | --- |
+| Frontend | Vue 3, Tailwind CSS 4, Vite, Leaflet |
+| Backend | Laravel 12, PHP 8.2+; use a current patched release |
+| Database | SQLite locally; MySQL-compatible database on Hostinger |
+| Hosting and jobs | Hostinger, GitHub Actions, Laravel scheduler |
+| External services | Fuel-chain public pages, OpenStreetMap tiles, Nominatim geocoding |
 
-## Main Project Structure
+## Technical architecture and decisions
+
+- Laravel handles ingestion, persistence and public JSON endpoints. Vue renders the interactive comparison; Blade serves the content pages and search metadata.
+- Source-specific parsers distinguish station prices from network-wide and published minimum prices. Each observation retains its source and timestamp so users can judge its meaning and freshness.
+- Imports run through trusted CLI jobs with a shared cache lock. Public HTTP traffic can read observations but cannot start scraping or write model data.
 
 ```text
-app/
-  Console/Commands/FetchFuelPrices.php      Fuel price refresh command
-  Http/Controllers/Api/                     JSON API controllers
-  Models/Station.php                        Gas station model
-  Models/FuelPrice.php                      Fuel price model
-  Services/FuelPrices/                      Source definitions and page parsing
-  Support/BlogPosts.php                     Static SEO blog content
-  Support/DiscountOffers.php                Static discount offer content
-
-database/
-  migrations/                               Database structure
-  seeders/DatabaseSeeder.php                Empty base seeder
-
-resources/
-  css/app.css                               Tailwind entry file
-  js/components/GasTracker.vue              Main Vue fuel tracker
-  views/                                    Laravel Blade pages and layout
-
-routes/
-  web.php                                   Public website routes
-  api.php                                   Frontend API routes
-  console.php                               Scheduler setup
-
-public/
-  images/cenalitra-logo.png                 Website logo
-  favicon.svg                               Browser icon
-  build/                                    Compiled frontend assets
+Public fuel pages → CLI importer → stations / prices → JSON API → Vue + Leaflet
+                                          └─────────→ Blade content + SEO
 ```
 
-## Local Setup
+## Local setup
 
-Use the renamed project folder:
+Install Git, Composer 2, Node.js 22.12+, and a supported patched PHP release with Laravel's required extensions plus pdo_sqlite, curl, mbstring, xml, fileinfo and zip.
 
-```powershell
-cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\cenalitra-lv"
-```
-
-Install PHP and Node dependencies if they are missing:
-
-```powershell
+```bash
+git clone https://github.com/Capzexe/Degvielas-Cenas.git
+cd Degvielas-Cenas
 composer install
-npm install
-```
-
-Create the environment file if it does not exist:
-
-```powershell
-copy .env.example .env
-& "C:\xampp\php\php.exe" artisan key:generate
-```
-
-For local SQLite, make sure `.env` contains:
-
-```env
-DB_CONNECTION=sqlite
-```
-
-Then prepare the database:
-
-```powershell
-& "C:\xampp\php\php.exe" artisan migrate --force
-& "C:\xampp\php\php.exe" artisan fetch:fuel-prices
-```
-
-## Start The Website Locally
-
-Open two PowerShell windows.
-
-Window 1: start Vite for frontend assets.
-
-```powershell
-cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\cenalitra-lv"
-npm run dev
-```
-
-Window 2: start Laravel through XAMPP PHP.
-
-```powershell
-cd "C:\Users\helvi\OneDrive\Documents\ChatGPT\New project\cenalitra-lv"
-& "C:\xampp\php\php.exe" -S 127.0.0.1:9000 -t public
-```
-
-Open:
-
-```text
-http://127.0.0.1:9000/
-```
-
-## Refresh Fuel Prices
-
-Run this any time you want to collect fresh prices:
-
-```powershell
-& "C:\xampp\php\php.exe" artisan fetch:fuel-prices
-```
-
-The command stores a new price row each time it finds a valid public price. This means the app can build historical data over time even if the history chart is not currently displayed on the home page.
-
-## Supported Data Sources
-
-The scraper is built around source-specific public pages and only saves data it can actually parse.
-
-Currently supported:
-
-- Circle K
-- Viada
-- Virši
-- Straujupīte
-
-Not currently filled automatically:
-
-- Neste, because a public station-level online price feed has not been confirmed.
-- KOOL, because the public page did not expose usable price text to the scraper.
-
-## Main URLs
-
-```text
-/                         Home page and fuel map
-/degvielas-atlaides       Fuel discounts
-/blog                     SEO blog
-/par-projektu             About page
-/sitemap.xml              XML sitemap
-/robots.txt               Search crawler rules
-/llms.txt                 LLM-readable project summary
-```
-
-## API URLs
-
-```text
-/api/stations/cheapest?fuel_type=95
-/api/stations/cheapest?fuel_type=98
-/api/stations/cheapest?fuel_type=Diesel
-/api/stations/cheapest?fuel_type=LPG
-/api/prices/history?fuel_type=95&days=30
-```
-
-## Production Build
-
-Compile frontend assets before deploying CSS or Vue changes:
-
-```powershell
+npm ci
+cp .env.example .env
+# PowerShell alternative: Copy-Item .env.example .env
+php artisan key:generate
+php -r "file_exists('database/database.sqlite') || touch('database/database.sqlite');"
+php artisan migrate
 npm run build
+php artisan serve --host=127.0.0.1 --port=8000
 ```
 
-This creates production files in:
+The example uses SQLite and disables debug output by default. Set `APP_ENV=local`, `APP_URL=http://127.0.0.1:8000`, `DB_CONNECTION=sqlite`, and `SESSION_SECURE_COOKIE=false` for local HTTP. Leave `DB_DATABASE` unset to use `database/database.sqlite`.
+
+Open [the local website](http://127.0.0.1:8000). For hot reload, run `npm run dev` in a second terminal. Populate prices separately:
+
+```bash
+php artisan fetch:fuel-prices
+# Optional private parser snapshots:
+php artisan fetch:fuel-prices --debug-source=Viada
+```
+
+A new database is empty until an import succeeds. Imports contact external sites and may take several minutes when geocoding uncached stations. Debug files are stored under `storage/app/private/debug`.
+
+## Pages and API
+
+| URL | Purpose |
+| --- | --- |
+| `/` | Comparison and map |
+| `/degvielas-atlaides` | Fuel discounts |
+| `/blog`, `/blog/{slug}` | Latvian articles |
+| `/par-projektu` | About the project |
+| `/sitemap.xml`, `/robots.txt`, `/llms.txt` | Discovery metadata |
+| `/api/stations/cheapest?fuel_type=95` | Latest prices sorted by fuel |
+| `/api/prices/history?fuel_type=95&days=30` | Historical observations |
+
+`fuel_type` accepts `95`, `98`, `Diesel` or `LPG`. It is optional for stations and required for history. `days` is an integer from 1 to 365, default 90. History considers the latest 10,000 matching observations, returns up to six series, and sets `truncated: true` when older matching records were omitted. Invalid input returns `422` with `Accept: application/json`.
+
+Public API reads share a 60-per-minute IP limit; history also has a 10-per-minute IP limit. Exceeding either returns `429` with `Retry-After`. Shared networks share a budget. The reload button retrieves stored data; it does not trigger an import.
+
+## Security
+
+Global middleware enforces production HTTPS, canonical hosts, a nonce CSP, HSTS, clickjacking protection, MIME protection, referrer and browser-permissions policies. Production session cookies are Secure, HttpOnly and SameSite=Lax. Debug output stays disabled in deployed environments even if `APP_DEBUG=true` is mistakenly configured.
+
+The public API is read-only. There are no login, registration, password-reset, token-issuing or file-upload routes. Models use explicit mass-assignment allowlists. Private storage remains outside the document root and automatic temporary file serving is disabled.
+
+See the [audit and verification instructions](docs/SECURITY-AUDIT.md), [security policy](SECURITY.md) and [deployment guide](docs/DEPLOYMENT.md). They explain the Leaflet style exception, server-only PHP controls, future authentication/upload patterns and operational limitations. Hardening is not a guarantee of absence of vulnerabilities.
+
+## Verification
+
+```bash
+npm test
+npm run build
+php artisan test
+php vendor/bin/pint --test
+composer validate --strict
+composer audit
+npm audit
+```
+
+Tests use isolated in-memory SQLite and never import live fuel prices. Rerun dependency audits before releases; results change over time. Dependabot is configured for weekly Composer, npm and workflow updates.
+
+## Deployment and scheduling
+
+Production uses a separate `public_html/` directory alongside the Laravel app, supported by `bootstrap/app.php`. Deploy the application and newly generated `public/build/`, and copy public assets and web rules to `public_html/`. Never upload the repository root, `.env`, database dumps or `vendor/` into the document root. Never regenerate the production `APP_KEY`.
+
+Follow the [deployment and rollback guide](docs/DEPLOYMENT.md). The included GitHub Actions workflow uses the `HOSTINGER_SSH_KEY` repository secret and a pinned SSH host key to run the importer every six hours in UTC. Alternatively, use one scheduler cron:
+
+```cron
+* * * * * cd /absolute/path/to/application && php artisan schedule:run >> /dev/null 2>&1
+```
+
+Laravel schedules every six hours in Europe/Riga. Choose one scheduling mechanism; the shared import lock also prevents simultaneous runs.
+
+## Project structure
 
 ```text
-public/build
+app/Console/Commands/        Import command and shared lock
+app/Services/FuelPrices/     Parsers, source definitions and geocoding
+app/Http/Controllers/Api/    Read-only public API
+app/Http/Requests/           Validated filters and history bounds
+app/Http/Middleware/         HTTPS and response protections
+resources/js/               Vue map and safe popup rendering
+resources/views/            Public content and structured data
+deploy/                     PHP and Nginx configuration examples
+docs/                       Audit and deployment instructions
+tests/                      Laravel and JavaScript regression tests
 ```
 
-## Hostinger Deployment Notes
+## Future improvements
 
-The app can be hosted on Hostinger if the hosting plan supports PHP, Composer dependencies, and a database.
+- Add verified station feeds for more chains, plus parser-health monitoring and freshness alerts.
+- Add an accessible history chart with pagination or daily aggregation, preserving source provenance and request budgets.
 
-Recommended production steps:
+## License
 
-```bash
-git pull --ff-only
-composer install --no-dev --optimize-autoloader
-php artisan migrate --force
-php artisan optimize:clear
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-```
-
-If Vue, CSS, logo, favicon, or other public assets change, upload or copy the updated `public/build`, `public/images`, and favicon files to the hosting public folder.
-
-For automatic refresh on Hostinger plans with Cron Jobs, add this cron job to run Laravel's scheduler every minute. Laravel will then fetch fuel prices automatically every six hours (00:00, 06:00, 12:00, and 18:00 in Latvia):
-
-```bash
-* * * * * php /home/USER/domains/DOMAIN/artisan schedule:run >> /dev/null 2>&1
-```
-
-To test the importer manually, run:
-
-```bash
-php /home/USER/domains/DOMAIN/artisan fetch:fuel-prices
-```
-
-For Hostinger plans without Cron Jobs, the included GitHub Actions workflow runs the importer every six hours instead. Add the Hostinger private key as the `HOSTINGER_SSH_KEY` repository secret before enabling it.
-
-## Development Notes
-
-- Website pages are Blade files in `resources/views`.
-- The main interactive tracker is Vue in `resources/js/components/GasTracker.vue`.
-- Backend API logic is in `app/Http/Controllers/Api`.
-- Data parsing is in `app/Services/FuelPrices`.
-- The database tables are `stations` and `prices`.
-- Public website routes live in `routes/web.php`.
-- JSON API routes live in `routes/api.php`.
-
-## Testing
-
-Run Laravel tests:
-
-```powershell
-& "C:\xampp\php\php.exe" artisan test
-```
-
-Run PHP formatting:
-
-```powershell
-& "C:\xampp\php\php.exe" vendor/bin/pint
-```
-
-## Repository
-
-GitHub:
-
-```text
-https://github.com/Capzexe/Degvielas-Cenas
-```
+The package declares MIT in `composer.json`. Third-party map data, fuel-chain content and dependencies retain their own terms and attribution requirements.

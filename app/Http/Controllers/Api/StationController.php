@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CheapestStationsRequest;
 use App\Models\Station;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 
 class StationController extends Controller
@@ -15,11 +14,9 @@ class StationController extends Controller
      * Return stations with their latest known prices, sorted by the selected
      * fuel price when a fuel_type filter is present.
      */
-    public function cheapest(Request $request): JsonResponse
+    public function cheapest(CheapestStationsRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'fuel_type' => ['nullable', Rule::in(['95', '98', 'Diesel', 'LPG'])],
-        ]);
+        $validated = $request->validated();
 
         $fuelType = $validated['fuel_type'] ?? null;
 

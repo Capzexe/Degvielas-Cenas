@@ -8,7 +8,7 @@
 @push('head')
     <meta property="article:published_time" content="{{ $post['published_at'] }}">
     <meta property="article:modified_time" content="{{ $post['updated_at'] }}">
-    <script type="application/ld+json">
+    <script type="application/ld+json" nonce="{{ Vite::cspNonce() }}">
         {!! json_encode([
             chr(64).'context' => 'https://schema.org',
             '@type' => 'BlogPosting',
@@ -28,9 +28,9 @@
                 '@type' => 'Organization',
                 'name' => 'Degvielas Cenas Latvijā',
             ],
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+        ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}
     </script>
-    <script type="application/ld+json">
+    <script type="application/ld+json" nonce="{{ Vite::cspNonce() }}">
         {!! json_encode([
             chr(64).'context' => 'https://schema.org',
             '@type' => 'FAQPage',
@@ -42,7 +42,7 @@
                     'text' => $faq['answer'],
                 ],
             ])->values(),
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+        ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}
     </script>
 @endpush
 
