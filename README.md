@@ -133,6 +133,3 @@ tests/                      Laravel and JavaScript regression tests
 - Add verified station feeds for more chains, plus parser-health monitoring and freshness alerts.
 - Add an accessible history chart with pagination or daily aggregation, preserving source provenance and request budgets.
 
-## License
-
-The package declares MIT in `composer.json`. Third-party map data, fuel-chain content and dependencies retain their own terms and attribution requirements.
